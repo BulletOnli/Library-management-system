@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-const withMT = require("@material-tailwind/react/utils/withMT");
 
 const config: Config = {
     content: [
@@ -17,5 +16,11 @@ const config: Config = {
         },
     },
     plugins: [],
+    // THIS CODE IS IMPORTANT WHEN USING CHAKRA UI IN NEXTJS APP DIR.
+    // Without this, other features of chakra ui will be reset like the button style.
+    corePlugins: {
+        preflight: false,
+    },
+    //
 };
 export default config;

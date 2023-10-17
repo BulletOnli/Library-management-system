@@ -1,3 +1,4 @@
+"use client";
 import {
     Accordion,
     AccordionButton,
@@ -56,24 +57,11 @@ const Sidebar = () => {
                                 <AccordionIcon position="absolute" right={4} />
                             </AccordionButton>
                         </p>
-                        <Link href="/books/list">
+                        <Link href="/books/manage">
                             <AccordionPanel p={0} bg="#008445">
                                 <p
                                     className={`${
-                                        pathname === "/books/list"
-                                            ? "bg-[#28A86C]"
-                                            : "bg-none"
-                                    } font-medium py-3 hover:bg-[#28A86C] cursor-pointer`}
-                                >
-                                    All Books
-                                </p>
-                            </AccordionPanel>
-                        </Link>
-                        <Link href="/books/list/manage">
-                            <AccordionPanel p={0} bg="#008445">
-                                <p
-                                    className={`${
-                                        pathname === "/books/list/manage"
+                                        pathname === "/books/manage"
                                             ? "bg-[#28A86C]"
                                             : "bg-none"
                                     } font-medium py-3 hover:bg-[#28A86C] cursor-pointer`}

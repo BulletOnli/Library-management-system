@@ -1,4 +1,5 @@
-import App from "./_app";
+import Sidebar from "@/components/Sidebar";
+import Providers from "./Providers";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -18,7 +19,12 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-                <App>{children}</App>
+                <Providers>
+                    <div className="w-full min-h-screen flex bg-[#28A86C] text-white">
+                        <Sidebar />
+                        <div className="w-full h-full flex ">{children}</div>
+                    </div>
+                </Providers>
             </body>
         </html>
     );

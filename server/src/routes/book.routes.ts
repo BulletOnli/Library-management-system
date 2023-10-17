@@ -9,7 +9,7 @@ import protectRoute from "../middlewares/protectRoute";
 
 const router = express.Router();
 
-router.get("/lists", getAllBooks);
+router.get("/list", getAllBooks);
 router.post("/add", protectRoute, addBook);
 router.put("/update", protectRoute, updateBook);
 router.delete("/remove", protectRoute, removeBook);

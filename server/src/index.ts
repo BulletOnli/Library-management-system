@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/auth", authRoutes);
-app.use("/book", bookRoutes);
+app.use("/books", bookRoutes);
 
 // Error Handler
 app.use(errorHandler);
