@@ -1,4 +1,5 @@
 "use client";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
     Table,
     Thead,
@@ -9,10 +10,18 @@ import {
     TableContainer,
     HStack,
     Button,
+    Input,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    InputGroup,
+    InputLeftElement,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
+import { BsSearch } from "react-icons/bs";
 
 export type BookType = {
     _id: string;
@@ -29,7 +38,7 @@ const TableComponent = () => {
         queryKey: ["books", "list", { page }],
         queryFn: async () => {
             const response = await axios.get(
-                `http://localhost:5050/books/list?page=${page}&limit=10`
+                `http://localhost:5050/books/list?page=${page}&limit=20`
             );
 
             return response.data;
@@ -42,13 +51,11 @@ const TableComponent = () => {
 
     return (
         <>
-            <TableContainer w="full" h="80vh" mt={10} overflowY="scroll">
+            <SortSearchComponent />
+            <TableContainer w="full" h="80vh" mt={4} overflowY="scroll">
                 <Table variant="unstyled">
                     <Thead>
                         <Tr>
-                            <Th className="border text-center p-2 text-base bg-[#008948]">
-                                Book ID
-                            </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
                                 Title
                             </Th>
@@ -61,7 +68,7 @@ const TableComponent = () => {
                             <Th className="border text-center p-2 text-base bg-[#008948]">
                                 Category
                             </Th>
-                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                            <Th className="w-fit border text-center p-2 text-base bg-[#008948]">
                                 Action
                             </Th>
                         </Tr>
@@ -69,9 +76,6 @@ const TableComponent = () => {
                     <Tbody>
                         {booksQuery.data?.results.map((data: BookType) => (
                             <Tr key={data._id}>
-                                <Td className="border text-center p-2 text-sm">
-                                    {data._id}
-                                </Td>
                                 <Td className="border text-center p-2 text-sm">
                                     {data.title}
                                 </Td>
@@ -84,7 +88,7 @@ const TableComponent = () => {
                                 <Td className="border text-center p-2 text-sm">
                                     {data.category}
                                 </Td>
-                                <Td className="border text-center p-2 text-sm">
+                                <Td className=" border text-center p-2 text-sm">
                                     <Button
                                         size="sm"
                                         variant="solid"
@@ -107,6 +111,7 @@ const TableComponent = () => {
                 </Table>
             </TableContainer>
 
+            {/* Pagination */}
             <div className="w-full mt-4 flex items-center justify-between">
                 <p className="text-sm">
                     Page {page} out of {booksQuery.data?.totalPage}
@@ -132,6 +137,61 @@ const TableComponent = () => {
                 </HStack>
             </div>
         </>
+    );
+};
+
+const SortSearchComponent = () => {
+    return (
+        <div className="w-full flex items-center justify-between">
+            <Menu isLazy size="">
+                <MenuButton
+                    size="sm"
+                    as={Button}
+                    rightIcon={<ChevronDownIcon />}
+                    colorScheme="green"
+                    bg={"#008948"}
+                >
+                    Sort By
+                </MenuButton>
+                <MenuList bg={"#008948"}>
+                    <MenuItem
+                        bg={"#008948"}
+                        _hover={{ bg: "#28A86C" }}
+                        fontSize={14}
+                        color="white"
+                    >
+                        Date
+                    </MenuItem>
+                    <MenuItem
+                        bg={"#008948"}
+                        _hover={{ bg: "#28A86C" }}
+                        fontSize={14}
+                        color="white"
+                    >
+                        Name
+                    </MenuItem>
+                </MenuList>
+            </Menu>
+
+            <InputGroup w={400}>
+                <InputLeftElement pointerEvents="none">
+                    <BsSearch color="gray.300" />
+                </InputLeftElement>
+                <Input
+                    placeholder="Search a Book"
+                    _placeholder={{ color: "gray.50" }}
+                />
+            </InputGroup>
+
+            <HStack>
+                <Button size="sm" colorScheme="blue">
+                    Add Book
+                </Button>
+                <Button size="sm" colorScheme="red">
+                    Export Data
+                </Button>
+            </HStack>
+        </div>
     );
 };
 
