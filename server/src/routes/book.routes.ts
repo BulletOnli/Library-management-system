@@ -1,6 +1,7 @@
 import express from "express";
 import {
     addBook,
+    exportBooksData,
     getAllBooks,
     removeBook,
     updateBook,
@@ -13,5 +14,7 @@ router.get("/list", getAllBooks);
 router.post("/add", protectRoute, addBook);
 router.put("/update", protectRoute, updateBook);
 router.delete("/remove", protectRoute, removeBook);
+
+router.get("/export", exportBooksData);
 
 export default router;

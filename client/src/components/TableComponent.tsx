@@ -141,6 +141,18 @@ const TableComponent = () => {
 };
 
 const SortSearchComponent = () => {
+    const exportButton = async () => {
+        const response = await axios.get("http://localhost:5050/books/export", {
+            responseType: "blob",
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "exported_data.csv");
+        document.body.appendChild(link);
+        link.click();
+    };
+
     return (
         <div className="w-full flex items-center justify-between">
             <Menu isLazy size="">
@@ -187,7 +199,7 @@ const SortSearchComponent = () => {
                 <Button size="sm" colorScheme="blue">
                     Add Book
                 </Button>
-                <Button size="sm" colorScheme="red">
+                <Button size="sm" colorScheme="red" onClick={exportButton}>
                     Export Data
                 </Button>
             </HStack>

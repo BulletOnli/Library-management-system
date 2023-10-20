@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import Book, { BookType } from "../models/bookModel";
+import { json2csv } from "json-2-csv";
+import fs from "fs";
 
 export const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
     const books = await Book.find().select("_id");
@@ -88,3 +90,25 @@ export const removeBook = asyncHandler(async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Deleted a book" });
 });
+
+export const exportBooksData = asyncHandler(
+    async (req: Request, res: Response) => {
+        const booksData = await Book.find();
+        const csv = await json2csv(booksData, {
+            keys: ["title", "author", "publisher", "category"],
+        });
+
+        const filename = `./src/books_data_${Date.now()}.csv`;
+        fs.writeFileSync(filename, csv);
+
+        res.setHeader("Content-Type", "text/csv");
+        res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="${filename}"`
+        );
+
+        res.download(filename, () => {
+            fs.unlinkSync(filename);
+        });
+    }
+);
