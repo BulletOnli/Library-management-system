@@ -12,17 +12,19 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import BooksTable from "./BooksTable";
 import AddBookModal from "./Modals/AddBookModal";
+import useSortBooks from "@/hooks/useSortBooks";
 
 const BooksSection = () => {
     const { isOpen, onClose, onOpen } = useDisclosure();
     const [currentPage, setPage] = useState(1);
+    const [sortBy, setSortBy] = useState("");
 
     const paginatedBooksQuery = useQuery({
-        queryKey: ["books", "list", "page", currentPage],
+        queryKey: ["books", "list", currentPage],
         queryFn: async () => {
             const response = await axios.get(
                 `http://localhost:5050/books/list/paginated?page=${currentPage}&limit=20`
@@ -31,6 +33,12 @@ const BooksSection = () => {
             return response.data;
         },
     });
+
+    // SORTED RESULTS
+    const { sortedArray } = useSortBooks(
+        paginatedBooksQuery.data?.results,
+        sortBy
+    );
 
     const exportBooksData = async () => {
         const response = await axios.get("http://localhost:5050/books/export", {
@@ -48,13 +56,17 @@ const BooksSection = () => {
         <>
             <div className="w-full flex items-center justify-between">
                 <HStack>
-                    <p>Filter by:</p>
-                    <Select w={150} size="sm">
-                        <option className="text-black" value="">
-                            Date added
+                    <p>Sort by:</p>
+                    <Select
+                        w={"fit-content"}
+                        size="sm"
+                        onChange={(e) => setSortBy(e.target.value)}
+                    >
+                        <option className="text-black" value="Date">
+                            Date added (Ascending)
                         </option>
-                        <option className="text-black" value="">
-                            Name
+                        <option className="text-black" value="Title">
+                            Title (Ascending)
                         </option>
                     </Select>
                 </HStack>
@@ -84,10 +96,7 @@ const BooksSection = () => {
             </div>
 
             <Spacer />
-            <BooksTable
-                bookList={paginatedBooksQuery.data?.results}
-                currentPage={currentPage}
-            />
+            <BooksTable bookList={sortedArray} currentPage={currentPage} />
             <Spacer />
 
             {/* Pagination */}
@@ -119,7 +128,11 @@ const BooksSection = () => {
                 </HStack>
             </div>
 
-            <AddBookModal isOpen={isOpen} onClose={onClose} />
+            <AddBookModal
+                isOpen={isOpen}
+                onClose={onClose}
+                currentPage={currentPage}
+            />
         </>
     );
 };

@@ -14,7 +14,7 @@ import {
     Input,
     Select,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,10 +23,12 @@ import { BookType } from "../BooksTable";
 type AddBookModalProps = {
     isOpen: boolean;
     onClose: () => void;
+    currentPage: number;
 };
 
-const AddBookModal = ({ isOpen, onClose }: AddBookModalProps) => {
+const AddBookModal = ({ isOpen, onClose, currentPage }: AddBookModalProps) => {
     const { handleSubmit, register, reset } = useForm<BookType>();
+    const queryClient = useQueryClient();
 
     const addBookMutation = useMutation({
         mutationFn: async (data: any) => {
@@ -43,13 +45,21 @@ const AddBookModal = ({ isOpen, onClose }: AddBookModalProps) => {
             return response.data;
         },
         onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["books", "list", currentPage],
+            });
             toast.success("Added new book!");
-            reset();
+            handleClose();
         },
     });
 
+    const handleClose = () => {
+        reset();
+        onClose();
+    };
+
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={handleClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>Add Book</ModalHeader>
@@ -148,7 +158,7 @@ const AddBookModal = ({ isOpen, onClose }: AddBookModalProps) => {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button variant="ghost" mr={3} onClick={onClose}>
+                        <Button variant="ghost" mr={3} onClick={handleClose}>
                             Close
                         </Button>
                         <Button

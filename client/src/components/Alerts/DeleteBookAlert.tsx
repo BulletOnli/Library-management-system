@@ -38,7 +38,7 @@ const DeleteBookAlert = ({
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["books", "list", "page", currentPage],
+                queryKey: ["books", "list", currentPage],
             });
             toast.success("Book has been deleted!");
             onClose();

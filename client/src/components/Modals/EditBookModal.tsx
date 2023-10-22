@@ -19,7 +19,6 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
-import BooksList from "@/app/books/manage/page";
 
 type EditBookModalProps = {
     isOpen: boolean;
@@ -36,12 +35,6 @@ const EditBookModal = ({
 }: EditBookModalProps) => {
     const { reset, handleSubmit, register } = useForm<BookType>();
     const queryClient = useQueryClient();
-    const booksList: BookType[] | undefined = queryClient.getQueryData([
-        "books",
-        "list",
-    ]);
-
-    const categories = [...new Set(booksList?.map((book) => book.category))];
 
     const editBookMutation = useMutation({
         mutationFn: async (data: BookType) => {
@@ -54,16 +47,20 @@ const EditBookModal = ({
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["books", "list", "page", currentPage],
+                queryKey: ["books", "list", currentPage],
             });
-            onClose();
-            reset();
             toast.success("Book updated");
+            handleClose();
         },
     });
 
+    const handleClose = () => {
+        reset();
+        onClose();
+    };
+
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={handleClose}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>Edit book details</ModalHeader>
@@ -179,7 +176,7 @@ const EditBookModal = ({
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button variant="ghost" mr={3} onClick={onClose}>
+                        <Button variant="ghost" mr={3} onClick={handleClose}>
                             Cancel
                         </Button>
                         <Button
