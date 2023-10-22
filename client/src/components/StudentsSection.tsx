@@ -13,20 +13,21 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import BooksTable from "./Tables/BooksTable";
-import AddBookModal from "./Modals/AddBookModal";
-import useSortBooks from "@/hooks/useSortBooks";
+import StudentsTable from "./Tables/StudentsTable";
+import AddStudentModal from "./Modals/AddStudentModal";
+import useSortStudents from "@/hooks/useSortStudents";
+import Link from "next/link";
 
-const BooksSection = () => {
+const StudentsSection = () => {
     const { isOpen, onClose, onOpen } = useDisclosure();
     const [currentPage, setPage] = useState(1);
     const [sortBy, setSortBy] = useState("");
 
-    const paginatedBooksQuery = useQuery({
-        queryKey: ["books", "list", currentPage],
+    const paginatedStudentsQuery = useQuery({
+        queryKey: ["students", "list", currentPage],
         queryFn: async () => {
             const response = await axios.get(
-                `http://localhost:5050/books/list/paginated?page=${currentPage}&limit=20`
+                `http://localhost:5050/students/list/paginated?page=${currentPage}&limit=5`
             );
 
             return response.data;
@@ -34,21 +35,26 @@ const BooksSection = () => {
     });
 
     // SORTED RESULTS
-    const { sortedArray } = useSortBooks(
-        paginatedBooksQuery.data?.results,
+    const { sortedArray } = useSortStudents(
+        paginatedStudentsQuery.data?.results,
         sortBy
     );
 
-    const exportBooksData = async () => {
-        const response = await axios.get("http://localhost:5050/books/export", {
-            responseType: "blob",
-        });
+    const exportStudentsData = async () => {
+        const response = await axios.get(
+            "http://localhost:5050/students/export",
+            {
+                responseType: "blob",
+            }
+        );
+
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "exported_data.csv");
+        link.setAttribute("download", "exported_students_data.csv");
         document.body.appendChild(link);
         link.click();
+        return url;
     };
 
     return (
@@ -64,8 +70,8 @@ const BooksSection = () => {
                         <option className="text-black" value="Date">
                             Date added (Ascending)
                         </option>
-                        <option className="text-black" value="Title">
-                            Title (Ascending)
+                        <option className="text-black" value="studentName">
+                            Student Name (Ascending)
                         </option>
                     </Select>
                 </HStack>
@@ -75,19 +81,19 @@ const BooksSection = () => {
                         <BsSearch color="gray.300" />
                     </InputLeftElement>
                     <Input
-                        placeholder="Search a Book"
+                        placeholder="Search a Student"
                         _placeholder={{ color: "gray.50" }}
                     />
                 </InputGroup>
 
                 <HStack>
                     <Button size="sm" colorScheme="blue" onClick={onOpen}>
-                        Add Book
+                        Add Student
                     </Button>
                     <Button
                         size="sm"
                         colorScheme="red"
-                        onClick={exportBooksData}
+                        onClick={exportStudentsData}
                     >
                         Export Data
                     </Button>
@@ -95,14 +101,17 @@ const BooksSection = () => {
             </div>
 
             <Spacer />
-            <BooksTable bookList={sortedArray} currentPage={currentPage} />
+            <StudentsTable
+                studentList={sortedArray}
+                currentPage={currentPage}
+            />
             <Spacer />
 
             {/* Pagination */}
             <div className="w-full mt-4 flex items-center justify-between">
                 <p className="text-sm">
                     Page {currentPage} out of{" "}
-                    {paginatedBooksQuery.data?.totalPage}
+                    {paginatedStudentsQuery.data?.totalPage}
                 </p>
 
                 <HStack>
@@ -119,7 +128,8 @@ const BooksSection = () => {
                         colorScheme="blue"
                         onClick={() => setPage((state) => state + 1)}
                         isDisabled={
-                            paginatedBooksQuery.data?.totalPage == currentPage
+                            paginatedStudentsQuery.data?.totalPage ==
+                            currentPage
                         }
                     >
                         Next
@@ -127,7 +137,7 @@ const BooksSection = () => {
                 </HStack>
             </div>
 
-            <AddBookModal
+            <AddStudentModal
                 isOpen={isOpen}
                 onClose={onClose}
                 currentPage={currentPage}
@@ -136,4 +146,4 @@ const BooksSection = () => {
     );
 };
 
-export default BooksSection;
+export default StudentsSection;

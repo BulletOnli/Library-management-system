@@ -1,14 +1,14 @@
-import { BookType } from "@/components/Tables/BooksTable";
+import { StudentType } from "@/components/Tables/StudentsTable";
 import { useState, useEffect } from "react";
 
-const useSortBooks = (initialArray: BookType[], sortOrder: string) => {
-    const [sortedArray, setSortedArray] = useState<BookType[]>([]);
+const useSortStudents = (initialArray: StudentType[], sortOrder: string) => {
+    const [sortedArray, setSortedArray] = useState<StudentType[]>([]);
 
     useEffect(() => {
-        if (initialArray && sortOrder === "Title") {
+        if (initialArray && sortOrder === "studentName") {
             const sorted = [...initialArray].sort((a: any, b: any) => {
-                const nameA = a.title.toLowerCase();
-                const nameB = b.title.toLowerCase();
+                const nameA = a.studentName.toLowerCase();
+                const nameB = b.studentName.toLowerCase();
 
                 if (nameA < nameB) return -1;
                 if (nameA > nameB) return 1;
@@ -25,4 +25,4 @@ const useSortBooks = (initialArray: BookType[], sortOrder: string) => {
     return { sortedArray };
 };
 
-export default useSortBooks;
+export default useSortStudents;

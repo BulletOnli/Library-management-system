@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes";
 import bookRoutes from "./routes/book.routes";
+import studentRoutes from "./routes/student.routes";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/auth", authRoutes);
 app.use("/books", bookRoutes);
+app.use("/students", studentRoutes);
 
 // Error Handler
 app.use(errorHandler);

@@ -13,16 +13,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import { BookType } from "../Tables/BooksTable";
+import { StudentType } from "../Tables/StudentsTable";
 
-const DeleteBookAlert = ({
+const DeleteStudentAlert = ({
     isOpen,
     onClose,
-    bookData,
+    studentData,
     currentPage,
 }: {
     isOpen: boolean;
     onClose: () => void;
-    bookData: BookType;
+    studentData: StudentType;
     currentPage: number;
 }) => {
     const queryClient = useQueryClient();
@@ -31,7 +32,7 @@ const DeleteBookAlert = ({
     const deleteBookMutation = useMutation({
         mutationFn: async () => {
             const response = await axios.delete(
-                `http://localhost:5050/books/remove?bookId=${bookData._id}`
+                `http://localhost:5050/books/remove?bookId=${studentData._id}`
             );
 
             return response.data;
@@ -80,4 +81,4 @@ const DeleteBookAlert = ({
     );
 };
 
-export default DeleteBookAlert;
+export default DeleteStudentAlert;

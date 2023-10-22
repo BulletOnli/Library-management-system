@@ -9,23 +9,22 @@ import {
     Button,
     useDisclosure,
 } from "@chakra-ui/react";
-import EditBookModal from "./Modals/EditBookModal";
-import DeleteBookAlert from "./Alerts/DeleteBookAlert";
-import { useState } from "react";
+import EditBookModal from "../Modals/EditBookModal";
+import DeleteBookAlert from "../Alerts/DeleteBookAlert";
+import EditStudentModal from "../Modals/EditStudentModal";
+import DeleteStudentAlert from "../Alerts/DeleteStudentAlert";
 
-export type BookType = {
+export type StudentType = {
     _id?: string;
-    title: string;
-    author: string;
-    publisher: string;
-    category: string;
+    studentName: string;
+    studentCourseAndYear: string;
 };
 
-const BooksTable = ({
-    bookList,
+const StudentsTable = ({
+    studentList,
     currentPage,
 }: {
-    bookList: BookType[];
+    studentList: StudentType[];
     currentPage: number;
 }) => {
     return (
@@ -35,16 +34,13 @@ const BooksTable = ({
                     <Thead>
                         <Tr>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
-                                Title
+                                Student ID
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
-                                Author
+                                Name
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
-                                Publiser
-                            </Th>
-                            <Th className="border text-center p-2 text-base bg-[#008948]">
-                                Category
+                                Course & Year Level
                             </Th>
                             <Th className="w-fit border text-center p-2 text-base bg-[#008948]">
                                 Action
@@ -52,7 +48,7 @@ const BooksTable = ({
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {bookList?.map((data: BookType) => (
+                        {studentList?.map((data: StudentType) => (
                             <TableRow
                                 data={data}
                                 currentPage={currentPage}
@@ -70,7 +66,7 @@ const TableRow = ({
     data,
     currentPage,
 }: {
-    data: BookType;
+    data: StudentType;
     currentPage: number;
 }) => {
     const editBookModal = useDisclosure();
@@ -78,10 +74,13 @@ const TableRow = ({
 
     return (
         <Tr key={data._id}>
-            <Td className="border text-center p-2 text-sm">{data.title}</Td>
-            <Td className="border text-center p-2 text-sm">{data.author}</Td>
-            <Td className="border text-center p-2 text-sm">{data.publisher}</Td>
-            <Td className="border text-center p-2 text-sm">{data.category}</Td>
+            <Td className="border text-center p-2 text-sm">{data._id}</Td>
+            <Td className="border text-center p-2 text-sm">
+                {data.studentName}
+            </Td>
+            <Td className="border text-center p-2 text-sm">
+                {data.studentCourseAndYear}
+            </Td>
             <Td className=" border text-center p-2 text-sm">
                 <Button
                     size="sm"
@@ -101,17 +100,17 @@ const TableRow = ({
                     Remove
                 </Button>
 
-                <EditBookModal
+                <EditStudentModal
                     isOpen={editBookModal.isOpen}
                     onClose={editBookModal.onClose}
-                    bookData={data}
+                    studentData={data}
                     currentPage={currentPage}
                 />
 
-                <DeleteBookAlert
+                <DeleteStudentAlert
                     isOpen={deleteBookAlert.isOpen}
                     onClose={deleteBookAlert.onClose}
-                    bookData={data}
+                    studentData={data}
                     currentPage={currentPage}
                 />
             </Td>
@@ -119,4 +118,4 @@ const TableRow = ({
     );
 };
 
-export default BooksTable;
+export default StudentsTable;

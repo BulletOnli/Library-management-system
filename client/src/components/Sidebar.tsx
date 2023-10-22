@@ -43,7 +43,7 @@ const Sidebar = () => {
                         Activity Log
                     </p>
                 </Link>
-                <Link href="/">
+                <Link href="/students/manage">
                     <p
                         className={`${
                             pathname === "/students/manage"

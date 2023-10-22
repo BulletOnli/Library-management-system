@@ -18,7 +18,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { BookType } from "../BooksTable";
+import { BookType } from "../Tables/BooksTable";
 
 type AddBookModalProps = {
     isOpen: boolean;
