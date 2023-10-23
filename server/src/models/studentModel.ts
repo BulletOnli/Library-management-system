@@ -10,6 +10,9 @@ const studentSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        studentQR: {
+            type: String,
+        },
     },
     {
         timestamps: true,

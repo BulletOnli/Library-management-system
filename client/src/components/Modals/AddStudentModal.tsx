@@ -11,12 +11,14 @@ import {
     VStack,
     FormLabel,
     Input,
+    Image,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { StudentType } from "../Tables/StudentsTable";
+import { useState } from "react";
 
 type AddStudentModalProps = {
     isOpen: boolean;
@@ -29,7 +31,8 @@ const AddStudentModal = ({
     onClose,
     currentPage,
 }: AddStudentModalProps) => {
-    const { handleSubmit, register, reset } = useForm<StudentType>();
+    const [qrSrc, setQrSrc] = useState("");
+    const { handleSubmit, register, reset, getValues } = useForm<StudentType>();
     const queryClient = useQueryClient();
 
     const addStudentMutation = useMutation({
@@ -43,7 +46,6 @@ const AddStudentModal = ({
                     },
                 }
             );
-
             return response.data;
         },
         onSuccess: () => {

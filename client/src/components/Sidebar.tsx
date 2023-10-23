@@ -18,7 +18,7 @@ const Sidebar = () => {
     return (
         <div className="sticky top-0 w-[18vw] h-screen flex flex-col items-center bg-[#008948]">
             <VStack mt={6}>
-                <Image src="/gjclogo.png" alt="GJC Logo" width={120} />
+                <Image src="/gjclogo.png" alt="GJC Logo" width={100} />
                 <p className="text-xl font-bold">College Library</p>
             </VStack>
 

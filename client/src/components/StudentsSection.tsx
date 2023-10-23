@@ -27,7 +27,7 @@ const StudentsSection = () => {
         queryKey: ["students", "list", currentPage],
         queryFn: async () => {
             const response = await axios.get(
-                `http://localhost:5050/students/list/paginated?page=${currentPage}&limit=5`
+                `http://localhost:5050/students/list/paginated?page=${currentPage}&limit=20`
             );
 
             return response.data;
@@ -52,9 +52,7 @@ const StudentsSection = () => {
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", "exported_students_data.csv");
-        document.body.appendChild(link);
         link.click();
-        return url;
     };
 
     return (

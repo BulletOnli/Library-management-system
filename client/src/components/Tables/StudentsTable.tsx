@@ -9,15 +9,16 @@ import {
     Button,
     useDisclosure,
 } from "@chakra-ui/react";
-import EditBookModal from "../Modals/EditBookModal";
-import DeleteBookAlert from "../Alerts/DeleteBookAlert";
 import EditStudentModal from "../Modals/EditStudentModal";
 import DeleteStudentAlert from "../Alerts/DeleteStudentAlert";
+import ShowQRModal from "../Modals/ShowQRModal";
 
 export type StudentType = {
     _id?: string;
     studentName: string;
     studentCourseAndYear: string;
+    studentQR: string;
+    createdAt: string;
 };
 
 const StudentsTable = ({
@@ -33,16 +34,19 @@ const StudentsTable = ({
                 <Table variant="unstyled">
                     <Thead>
                         <Tr>
-                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                            <Th className="w-[20rem] border text-center p-2 text-base bg-[#008948]">
                                 Student ID
                             </Th>
-                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                            <Th className="w-[25rem] border text-center p-2 text-base bg-[#008948]">
                                 Name
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
                                 Course & Year Level
                             </Th>
-                            <Th className="w-fit border text-center p-2 text-base bg-[#008948]">
+                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                                Date Registered
+                            </Th>
+                            <Th className="w-[20rem] border text-center p-2 text-base bg-[#008948]">
                                 Action
                             </Th>
                         </Tr>
@@ -69,6 +73,7 @@ const TableRow = ({
     data: StudentType;
     currentPage: number;
 }) => {
+    const showQrModal = useDisclosure();
     const editBookModal = useDisclosure();
     const deleteBookAlert = useDisclosure();
 
@@ -81,7 +86,20 @@ const TableRow = ({
             <Td className="border text-center p-2 text-sm">
                 {data.studentCourseAndYear}
             </Td>
+            <Td className="border text-center p-2 text-sm">
+                {data.createdAt.slice(0, 10)}
+            </Td>
             <Td className=" border text-center p-2 text-sm">
+                <Button
+                    size="sm"
+                    variant="solid"
+                    colorScheme="green"
+                    backgroundColor={"#008948"}
+                    mr={2}
+                    onClick={showQrModal.onOpen}
+                >
+                    Show QR
+                </Button>
                 <Button
                     size="sm"
                     variant="solid"
@@ -99,6 +117,12 @@ const TableRow = ({
                 >
                     Remove
                 </Button>
+
+                <ShowQRModal
+                    isOpen={showQrModal.isOpen}
+                    onClose={showQrModal.onClose}
+                    studentData={data}
+                />
 
                 <EditStudentModal
                     isOpen={editBookModal.isOpen}

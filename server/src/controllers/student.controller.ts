@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import Student, { StudentType } from "../models/studentModel";
 import { json2csv } from "json-2-csv";
 import fs from "fs";
+import QRCode from "qrcode";
 
 export const getAllStudents = asyncHandler(
     async (req: Request, res: Response) => {
@@ -64,6 +65,22 @@ export const addStudent = asyncHandler(async (req: Request, res: Response) => {
         studentCourseAndYear,
     });
 
+    const qrDetails = {
+        studentName: newStudent.studentName,
+        studentCourseAndYear: newStudent.studentCourseAndYear,
+        _id: newStudent._id,
+    };
+
+    QRCode.toDataURL(JSON.stringify(qrDetails), (err, url) => {
+        newStudent.studentQR = url;
+        newStudent.save();
+
+        if (err) {
+            res.status(500);
+            throw new Error("An Error occured on the server");
+        }
+    });
+
     if (newStudent) {
         res.status(200).json({ message: "New student created!" });
     } else {
@@ -76,14 +93,36 @@ export const updateStudent = asyncHandler(
         const { studentName, studentCourseAndYear } = req.body;
         const { studentId } = req.query;
 
-        const student = await Student.findById(studentId);
+        const student = await Student.findById(studentId).select([
+            "studentName",
+            "studentCourseAndYear",
+            "studentQR",
+        ]);
 
         if (student) {
-            if (studentName) student.studentName = studentName;
-            if (studentCourseAndYear)
-                student.studentCourseAndYear = studentCourseAndYear;
+            const _id = student._id;
 
-            student.save();
+            QRCode.toDataURL(
+                JSON.stringify({
+                    studentName,
+                    studentCourseAndYear,
+                    _id,
+                }),
+                (err, url) => {
+                    if (studentName) student.studentName = studentName;
+                    if (studentCourseAndYear)
+                        student.studentCourseAndYear = studentCourseAndYear;
+
+                    student.studentQR = url;
+                    student.save();
+
+                    if (err) {
+                        res.status(500);
+                        throw new Error("An Error occured on the server");
+                    }
+                }
+            );
+
             res.status(200).json({ message: "Student details updated!" });
         } else {
             res.status(404).json({ message: "Student not found!" });
@@ -105,11 +144,31 @@ export const removeStudent = asyncHandler(
     }
 );
 
+export const downloadStudentQR = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { studentId } = req.query;
+        const student = await Student.findById(studentId).select(["studentQR"]);
+
+        // if (student) {
+        //     const base64Data = student?.studentQR;
+        //     const blob = new Blob([base64Data], { type: "image/png" });
+        // } else {
+        //     res.status(500).json({ message: "Server Error" });
+        // }
+    }
+);
+
 export const exportStudentsData = asyncHandler(
     async (req: Request, res: Response) => {
         const studentsData = await Student.find();
         const csv = await json2csv(studentsData, {
-            keys: ["_id", "studentName", "studentCourseAndYear"],
+            keys: [
+                "_id",
+                "studentName",
+                "studentCourseAndYear",
+                "studentQR",
+                "createdAt",
+            ],
         });
 
         const filename = `./src/students_data.csv`;
