@@ -21,7 +21,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { StudentType } from "../Tables/StudentsTable";
 
-type EditBookModalProps = {
+type EditStudentModalProps = {
     isOpen: boolean;
     onClose: () => void;
     studentData: StudentType;
@@ -33,24 +33,23 @@ const EditStudentModal = ({
     onClose,
     studentData,
     currentPage,
-}: EditBookModalProps) => {
+}: EditStudentModalProps) => {
     const { reset, handleSubmit, register } = useForm<StudentType>();
     const queryClient = useQueryClient();
 
-    const editBookMutation = useMutation({
-        mutationFn: async (data: BookType) => {
+    const editStudentMutation = useMutation({
+        mutationFn: async (data: StudentType) => {
             const response = await axios.put(
-                `http://localhost:5050/books/update?bookId=${studentData._id}`,
+                `http://localhost:5050/students/update?studentId=${studentData._id}`,
                 data
             );
-
             return response.data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["books", "list", currentPage],
+                queryKey: ["students", "list", currentPage],
             });
-            toast.success("Book updated");
+            toast.success("Student details updated");
             handleClose();
         },
     });
@@ -68,7 +67,7 @@ const EditStudentModal = ({
                 <ModalCloseButton />
                 <form
                     onSubmit={handleSubmit((data) => {
-                        // editBookMutation.mutate(data);
+                        editStudentMutation.mutate(data);
                     })}
                 >
                     <ModalBody>
@@ -78,9 +77,8 @@ const EditStudentModal = ({
                                     Student ID:
                                 </FormLabel>
                                 <Input
-                                    {...register("_id", { required: true })}
+                                    {...register("_id")}
                                     defaultValue={studentData._id}
-                                    isRequired
                                     isDisabled
                                 />
                             </VStack>
@@ -120,7 +118,7 @@ const EditStudentModal = ({
                         <Button
                             type="submit"
                             colorScheme="blue"
-                            isLoading={editBookMutation.isPending}
+                            isLoading={editStudentMutation.isPending}
                         >
                             Save Changes
                         </Button>

@@ -56,6 +56,55 @@ export const paginatedStudentsList = asyncHandler(
     }
 );
 
+export const addStudent = asyncHandler(async (req: Request, res: Response) => {
+    const { studentName, studentCourseAndYear } = req.body;
+
+    const newStudent = await Student.create({
+        studentName,
+        studentCourseAndYear,
+    });
+
+    if (newStudent) {
+        res.status(200).json({ message: "New student created!" });
+    } else {
+        res.status(500).json({ message: "An Error occured on our server" });
+    }
+});
+
+export const updateStudent = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { studentName, studentCourseAndYear } = req.body;
+        const { studentId } = req.query;
+
+        const student = await Student.findById(studentId);
+
+        if (student) {
+            if (studentName) student.studentName = studentName;
+            if (studentCourseAndYear)
+                student.studentCourseAndYear = studentCourseAndYear;
+
+            student.save();
+            res.status(200).json({ message: "Student details updated!" });
+        } else {
+            res.status(404).json({ message: "Student not found!" });
+        }
+    }
+);
+
+export const removeStudent = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { studentId } = req.query;
+
+        const deleted = await Student.findByIdAndDelete(studentId);
+
+        if (deleted) {
+            res.status(200).json({ message: "Student deleted!" });
+        } else {
+            res.status(404).json({ message: "Student not found!" });
+        }
+    }
+);
+
 export const exportStudentsData = asyncHandler(
     async (req: Request, res: Response) => {
         const studentsData = await Student.find();

@@ -12,7 +12,6 @@ import { useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
-import { BookType } from "../Tables/BooksTable";
 import { StudentType } from "../Tables/StudentsTable";
 
 const DeleteStudentAlert = ({
@@ -29,19 +28,19 @@ const DeleteStudentAlert = ({
     const queryClient = useQueryClient();
     const cancelRef = useRef(null);
 
-    const deleteBookMutation = useMutation({
+    const deleteStudentMutation = useMutation({
         mutationFn: async () => {
             const response = await axios.delete(
-                `http://localhost:5050/books/remove?bookId=${studentData._id}`
+                `http://localhost:5050/students/remove?studentId=${studentData._id}`
             );
 
             return response.data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["books", "list", currentPage],
+                queryKey: ["students", "list", currentPage],
             });
-            toast.success("Book has been deleted!");
+            toast.success("Student has been deleted!");
             onClose();
         },
     });
@@ -68,9 +67,9 @@ const DeleteStudentAlert = ({
                         </Button>
                         <Button
                             colorScheme="red"
-                            onClick={() => deleteBookMutation.mutate()}
+                            onClick={() => deleteStudentMutation.mutate()}
                             ml={3}
-                            isLoading={deleteBookMutation.isPending}
+                            isLoading={deleteStudentMutation.isPending}
                         >
                             Remove
                         </Button>

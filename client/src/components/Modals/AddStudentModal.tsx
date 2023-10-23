@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { StudentType } from "../Tables/StudentsTable";
 
-type AddBookModalProps = {
+type AddStudentModalProps = {
     isOpen: boolean;
     onClose: () => void;
     currentPage: number;
@@ -28,14 +28,14 @@ const AddStudentModal = ({
     isOpen,
     onClose,
     currentPage,
-}: AddBookModalProps) => {
+}: AddStudentModalProps) => {
     const { handleSubmit, register, reset } = useForm<StudentType>();
     const queryClient = useQueryClient();
 
-    const addBookMutation = useMutation({
-        mutationFn: async (data: any) => {
+    const addStudentMutation = useMutation({
+        mutationFn: async (data: StudentType) => {
             const response = await axios.post(
-                "http://localhost:5050/books/add",
+                "http://localhost:5050/students/add",
                 data,
                 {
                     headers: {
@@ -48,9 +48,9 @@ const AddStudentModal = ({
         },
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ["books", "list", currentPage],
+                queryKey: ["students", "list", currentPage],
             });
-            toast.success("Added new book!");
+            toast.success("New Student added!");
             handleClose();
         },
     });
@@ -68,7 +68,7 @@ const AddStudentModal = ({
                 <ModalCloseButton />
                 <form
                     onSubmit={handleSubmit((data) => {
-                        addBookMutation.mutate(data);
+                        addStudentMutation.mutate(data);
                     })}
                 >
                     <ModalBody>
@@ -99,7 +99,7 @@ const AddStudentModal = ({
                         <Button
                             type="submit"
                             colorScheme="blue"
-                            isLoading={addBookMutation.isPending}
+                            isLoading={addStudentMutation.isPending}
                         >
                             Save
                         </Button>
