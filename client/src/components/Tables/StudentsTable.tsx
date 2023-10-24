@@ -16,7 +16,7 @@ import ShowQRModal from "../Modals/ShowQRModal";
 export type StudentType = {
     _id?: string;
     studentName: string;
-    studentCourseAndYear: string;
+    studentCourse: string;
     studentQR: string;
     createdAt: string;
 };
@@ -38,10 +38,10 @@ const StudentsTable = ({
                                 Student ID
                             </Th>
                             <Th className="w-[25rem] border text-center p-2 text-base bg-[#008948]">
-                                Name
+                                Full name
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
-                                Course & Year Level
+                                Course
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
                                 Date Registered
@@ -84,7 +84,7 @@ const TableRow = ({
                 {data.studentName}
             </Td>
             <Td className="border text-center p-2 text-sm">
-                {data.studentCourseAndYear}
+                {data.studentCourse}
             </Td>
             <Td className="border text-center p-2 text-sm">
                 {data.createdAt.slice(0, 10)}

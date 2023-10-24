@@ -1,16 +1,43 @@
 "use client";
 import { Chart as ChartJS, Tooltip, Legend, ArcElement } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import { useQueryClient } from "@tanstack/react-query";
+import { StudentType } from "../Tables/StudentsTable";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const CourseChart = () => {
+    const queryClient = useQueryClient();
+
+    const studentsList: StudentType[] | undefined = queryClient.getQueryData([
+        "students",
+        "list",
+    ]);
+
+    const filterCourseCount = (course: string) => {
+        return studentsList?.filter(
+            (a) => a.studentCourse === course.toUpperCase()
+        ).length;
+    };
+
     const data = {
         labels: ["BSIT", "BSED", "BSBA", "BSHM", "BSA"],
         datasets: [
             {
-                data: [5, 12, 7, 8, 2],
-                backgroundColor: ["red", "blue", "green", "pink", "yellow"],
+                data: [
+                    filterCourseCount("BSIT"),
+                    filterCourseCount("BSED"),
+                    filterCourseCount("BSBA"),
+                    filterCourseCount("BSHM"),
+                    filterCourseCount("BSA"),
+                ],
+                backgroundColor: [
+                    "#8C3333", // Maroon
+                    "#0077b6", // Blue
+                    "#ffbd00", // Yellow
+                    "#4c956c", // green
+                    "#ffb3c1", // Pink
+                ],
                 borderColor: "#F0D77B",
                 borderWidth: 2,
             },

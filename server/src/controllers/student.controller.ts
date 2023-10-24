@@ -58,16 +58,16 @@ export const paginatedStudentsList = asyncHandler(
 );
 
 export const addStudent = asyncHandler(async (req: Request, res: Response) => {
-    const { studentName, studentCourseAndYear } = req.body;
+    const { studentName, studentCourse } = req.body;
 
     const newStudent = await Student.create({
         studentName,
-        studentCourseAndYear,
+        studentCourse,
     });
 
     const qrDetails = {
         studentName: newStudent.studentName,
-        studentCourseAndYear: newStudent.studentCourseAndYear,
+        studentCourse: newStudent.studentCourse,
         _id: newStudent._id,
     };
 
@@ -90,12 +90,12 @@ export const addStudent = asyncHandler(async (req: Request, res: Response) => {
 
 export const updateStudent = asyncHandler(
     async (req: Request, res: Response) => {
-        const { studentName, studentCourseAndYear } = req.body;
+        const { studentName, studentCourse } = req.body;
         const { studentId } = req.query;
 
         const student = await Student.findById(studentId).select([
             "studentName",
-            "studentCourseAndYear",
+            "studentCourse",
             "studentQR",
         ]);
 
@@ -105,13 +105,12 @@ export const updateStudent = asyncHandler(
             QRCode.toDataURL(
                 JSON.stringify({
                     studentName,
-                    studentCourseAndYear,
+                    studentCourse,
                     _id,
                 }),
                 (err, url) => {
                     if (studentName) student.studentName = studentName;
-                    if (studentCourseAndYear)
-                        student.studentCourseAndYear = studentCourseAndYear;
+                    if (studentCourse) student.studentCourse = studentCourse;
 
                     student.studentQR = url;
                     student.save();
@@ -165,7 +164,7 @@ export const exportStudentsData = asyncHandler(
             keys: [
                 "_id",
                 "studentName",
-                "studentCourseAndYear",
+                "studentCourse",
                 "studentQR",
                 "createdAt",
             ],

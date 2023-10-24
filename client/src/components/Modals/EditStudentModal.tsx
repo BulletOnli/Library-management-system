@@ -96,17 +96,20 @@ const EditStudentModal = ({
                             </VStack>
                             <VStack w={"full"} spacing={0}>
                                 <FormLabel className="w-full">
-                                    Course & Year Level:
+                                    Course:
                                 </FormLabel>
-                                <Input
-                                    {...register("studentCourseAndYear", {
-                                        required: true,
-                                    })}
-                                    defaultValue={
-                                        studentData.studentCourseAndYear
-                                    }
+                                <Select
+                                    {...register("studentCourse")}
                                     isRequired
-                                />
+                                    placeholder="Select course"
+                                    defaultValue={studentData.studentCourse}
+                                >
+                                    <option value="BSIT">BSIT</option>
+                                    <option value="BSA">BSA</option>
+                                    <option value="BSED">BSED</option>
+                                    <option value="BSBA">BSBA</option>
+                                    <option value="BSHM">BSHM</option>
+                                </Select>
                             </VStack>
                         </div>
                     </ModalBody>

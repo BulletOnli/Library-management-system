@@ -12,6 +12,7 @@ import {
     FormLabel,
     Input,
     Image,
+    Select,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -76,7 +77,9 @@ const AddStudentModal = ({
                     <ModalBody>
                         <div className="w-full flex flex-col items-center gap-2">
                             <VStack w={"full"} spacing={0}>
-                                <FormLabel className="w-full">Name:</FormLabel>
+                                <FormLabel className="w-full">
+                                    Student name:
+                                </FormLabel>
                                 <Input
                                     {...register("studentName")}
                                     isRequired
@@ -84,12 +87,19 @@ const AddStudentModal = ({
                             </VStack>
                             <VStack w={"full"} spacing={0}>
                                 <FormLabel className="w-full">
-                                    Course & Year:
+                                    Course:
                                 </FormLabel>
-                                <Input
-                                    {...register("studentCourseAndYear")}
+                                <Select
+                                    {...register("studentCourse")}
                                     isRequired
-                                />
+                                    placeholder="Select course"
+                                >
+                                    <option value="BSIT">BSIT</option>
+                                    <option value="BSA">BSA</option>
+                                    <option value="BSED">BSED</option>
+                                    <option value="BSBA">BSBA</option>
+                                    <option value="BSHM">BSHM</option>
+                                </Select>
                             </VStack>
                         </div>
                     </ModalBody>
