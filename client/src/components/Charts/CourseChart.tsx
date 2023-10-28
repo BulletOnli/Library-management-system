@@ -1,22 +1,27 @@
 "use client";
 import { Chart as ChartJS, Tooltip, Legend, ArcElement } from "chart.js";
 import { Pie } from "react-chartjs-2";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { StudentType } from "../Tables/StudentsTable";
+import axios from "axios";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const CourseChart = () => {
-    const queryClient = useQueryClient();
+    const studentsQuery = useQuery({
+        queryKey: ["students", "list"],
+        queryFn: async () => {
+            const response = await axios.get(
+                "http://localhost:5050/students/list"
+            );
 
-    const studentsList: StudentType[] | undefined = queryClient.getQueryData([
-        "students",
-        "list",
-    ]);
+            return response.data;
+        },
+    });
 
     const filterCourseCount = (course: string) => {
-        return studentsList?.filter(
-            (a) => a.studentCourse === course.toUpperCase()
+        return studentsQuery?.data?.filter(
+            (a: StudentType) => a.studentCourse === course.toUpperCase()
         ).length;
     };
 

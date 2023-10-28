@@ -14,7 +14,6 @@ const HomePage = () => {
                 <div className="w-full flex justify-center items-center bg-[#008948] p-6 rounded-xl border-[#F0D77B] border-2">
                     <VStack w={"full"}>
                         <p className="mb-4 font-medium">Student Courses</p>
-
                         <CourseChart />
                     </VStack>
                 </div>

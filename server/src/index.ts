@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import errorHandler from "./middlewares/errorHandler";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 
 import authRoutes from "./routes/auth.routes";
 import bookRoutes from "./routes/book.routes";
@@ -15,6 +16,7 @@ const port = process.env.PORT || 8080;
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 app.use(cors());
 app.use(cookieParser());
 
