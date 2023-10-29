@@ -9,21 +9,22 @@ import {
     ModalCloseButton,
     Button,
 } from "@chakra-ui/react";
+import CameraComponent from "../CameraComponent";
 
 type AddManualAttendanceProps = {
     onClose: () => void;
     isOpen: boolean;
 };
 
-const AddAutoAttendance = ({ onClose, isOpen }: AddManualAttendanceProps) => {
+const AddVisitorAuto = ({ onClose, isOpen }: AddManualAttendanceProps) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Modal Title</ModalHeader>
+                <ModalHeader>New visitor via QR</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <p>dsfd</p>
+                    <CameraComponent />
                 </ModalBody>
 
                 <ModalFooter>
@@ -37,4 +38,4 @@ const AddAutoAttendance = ({ onClose, isOpen }: AddManualAttendanceProps) => {
     );
 };
 
-export default AddAutoAttendance;
+export default AddVisitorAuto;

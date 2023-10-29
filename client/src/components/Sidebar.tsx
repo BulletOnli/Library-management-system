@@ -32,15 +32,13 @@ const Sidebar = () => {
                         Dashboard
                     </p>
                 </Link>
-                <Link href="/attendance">
+                <Link href="/visitor">
                     <p
                         className={`${
-                            pathname === "/attendance"
-                                ? "bg-[#28A86C]"
-                                : "bg-none"
+                            pathname === "/visitor" ? "bg-[#28A86C]" : "bg-none"
                         } font-medium text-lg px-4 py-2 hover:bg-[#28A86C] cursor-pointer`}
                     >
-                        Attendance Log
+                        Visitor Log
                     </p>
                 </Link>
                 <Link href="/students/manage">

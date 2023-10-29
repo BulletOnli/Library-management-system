@@ -12,13 +12,13 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import AttendanceTable from "./Tables/AttendanceTable";
-import AddAutoAttendance from "./Modals/AddAutoAttendance";
-import AddManualAttendance from "./Modals/AddManualAttendance";
+import AttendanceTable from "./Tables/VisitorTable";
+import AddVisitorAuto from "./Modals/AddVisitorAuto";
+import AddVisitorManual from "./Modals/AddVisitorManual";
 
-const AttendanceSection = () => {
-    const autoAttendanceModal = useDisclosure();
-    const manualAttendanceModal = useDisclosure();
+const VisitorSection = () => {
+    const manualVisitorModal = useDisclosure();
+    const autoVisitorModal = useDisclosure();
     const [currentPage, setPage] = useState(1);
 
     const paginatedAttendanceQuery = useQuery({
@@ -54,14 +54,14 @@ const AttendanceSection = () => {
                     <Button
                         size="sm"
                         colorScheme="blackAlpha"
-                        onClick={autoAttendanceModal.onOpen}
+                        onClick={autoVisitorModal.onOpen}
                     >
                         Add via QR Code
                     </Button>
                     <Button
                         size="sm"
                         colorScheme="green"
-                        onClick={manualAttendanceModal.onOpen}
+                        onClick={manualVisitorModal.onOpen}
                     >
                         Add manually
                     </Button>
@@ -120,16 +120,16 @@ const AttendanceSection = () => {
                 </HStack>
             </div>
 
-            <AddAutoAttendance
-                isOpen={manualAttendanceModal.isOpen}
-                onClose={manualAttendanceModal.onClose}
+            <AddVisitorAuto
+                isOpen={autoVisitorModal.isOpen}
+                onClose={autoVisitorModal.onClose}
             />
-            <AddManualAttendance
-                isOpen={autoAttendanceModal.isOpen}
-                onClose={autoAttendanceModal.onClose}
+            <AddVisitorManual
+                isOpen={manualVisitorModal.isOpen}
+                onClose={manualVisitorModal.onClose}
             />
         </>
     );
 };
 
-export default AttendanceSection;
+export default VisitorSection;

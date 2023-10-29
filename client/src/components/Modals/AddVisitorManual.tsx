@@ -15,12 +15,12 @@ type AddManualAttendanceProps = {
     isOpen: boolean;
 };
 
-const AddManualAttendance = ({ onClose, isOpen }: AddManualAttendanceProps) => {
+const AddVisitorManual = ({ onClose, isOpen }: AddManualAttendanceProps) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Modal Title</ModalHeader>
+                <ModalHeader>New visitor</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                     <p>dsfd</p>
@@ -37,4 +37,4 @@ const AddManualAttendance = ({ onClose, isOpen }: AddManualAttendanceProps) => {
     );
 };
 
-export default AddManualAttendance;
+export default AddVisitorManual;

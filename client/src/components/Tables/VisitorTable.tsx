@@ -13,19 +13,21 @@ import EditStudentModal from "../Modals/EditStudentModal";
 import DeleteStudentAlert from "../Alerts/DeleteStudentAlert";
 import ShowQRModal from "../Modals/ShowQRModal";
 
-export type StudentType = {
+export type VisitorType = {
     _id?: string;
-    studentName: string;
-    studentCourse: string;
-    studentQR: string;
-    createdAt: string;
+    firstName: string;
+    lastName: string;
+    department: string;
+    purpose: string;
+    timeIn: string;
+    timeOut?: string;
 };
 
-const AttendanceTable = ({
+const VisitorTable = ({
     studentList,
     currentPage,
 }: {
-    studentList: StudentType[];
+    studentList: VisitorType[];
     currentPage: number;
 }) => {
     return (
@@ -34,25 +36,31 @@ const AttendanceTable = ({
                 <Table variant="unstyled">
                     <Thead>
                         <Tr>
-                            <Th className="w-[20rem] border text-center p-2 text-base bg-[#008948]">
-                                Student ID
-                            </Th>
-                            <Th className="w-[25rem] border text-center p-2 text-base bg-[#008948]">
-                                Full name
+                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                                Last name
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
-                                Course
+                                First name
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
-                                Date Registered
+                                Department
                             </Th>
-                            <Th className="w-[20rem] border text-center p-2 text-base bg-[#008948]">
+                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                                Purpose
+                            </Th>
+                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                                Time in
+                            </Th>
+                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                                Time out
+                            </Th>
+                            <Th className="w-[10rem] border text-center p-2 text-base bg-[#008948]">
                                 Action
                             </Th>
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {studentList?.map((data: StudentType) => (
+                        {studentList?.map((data: VisitorType) => (
                             <TableRow
                                 data={data}
                                 currentPage={currentPage}
@@ -70,7 +78,7 @@ const TableRow = ({
     data,
     currentPage,
 }: {
-    data: StudentType;
+    data: VisitorType;
     currentPage: number;
 }) => {
     const showQrModal = useDisclosure();
@@ -79,16 +87,14 @@ const TableRow = ({
 
     return (
         <Tr key={data._id}>
-            <Td className="border text-center p-2 text-sm">{data._id}</Td>
+            <Td className="border text-center p-2 text-sm">{data.lastName}</Td>
+            <Td className="border text-center p-2 text-sm">{data.firstName}</Td>
             <Td className="border text-center p-2 text-sm">
-                {data.studentName}
+                {data.department}
             </Td>
-            <Td className="border text-center p-2 text-sm">
-                {data.studentCourse}
-            </Td>
-            <Td className="border text-center p-2 text-sm">
-                {data.createdAt.slice(0, 10)}
-            </Td>
+            <Td className="border text-center p-2 text-sm">{data.purpose}</Td>
+            <Td className="border text-center p-2 text-sm">{data.timeIn}</Td>
+            <Td className="border text-center p-2 text-sm">{data?.timeOut}</Td>
             <Td className=" border text-center p-2 text-sm">
                 <Button
                     size="sm"
@@ -118,7 +124,7 @@ const TableRow = ({
                     Remove
                 </Button>
 
-                <ShowQRModal
+                {/* <ShowQRModal
                     isOpen={showQrModal.isOpen}
                     onClose={showQrModal.onClose}
                     studentData={data}
@@ -136,10 +142,10 @@ const TableRow = ({
                     onClose={deleteBookAlert.onClose}
                     studentData={data}
                     currentPage={currentPage}
-                />
+                /> */}
             </Td>
         </Tr>
     );
 };
 
-export default AttendanceTable;
+export default VisitorTable;
