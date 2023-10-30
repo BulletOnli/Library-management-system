@@ -21,11 +21,11 @@ const VisitorSection = () => {
     const autoVisitorModal = useDisclosure();
     const [currentPage, setPage] = useState(1);
 
-    const paginatedAttendanceQuery = useQuery({
-        queryKey: ["students", "list", currentPage],
+    const paginatedVisitorQuery = useQuery({
+        queryKey: ["visitor", "list"],
         queryFn: async () => {
             const response = await axios.get(
-                `http://localhost:5050/students/list/paginated?page=${currentPage}&limit=20`
+                `http://localhost:5050/visitor/list`
             );
 
             return response.data;
@@ -72,7 +72,7 @@ const VisitorSection = () => {
                         <BsSearch color="gray.300" />
                     </InputLeftElement>
                     <Input
-                        placeholder="Search a Student"
+                        placeholder="Search a Visitor"
                         _placeholder={{ color: "gray.50" }}
                     />
                 </InputGroup>
@@ -87,14 +87,17 @@ const VisitorSection = () => {
             </div>
 
             <Spacer />
-            <AttendanceTable studentList={[]} currentPage={currentPage} />
+            <AttendanceTable
+                studentList={paginatedVisitorQuery.data}
+                currentPage={currentPage}
+            />
             <Spacer />
 
             {/* Pagination */}
             <div className="w-full mt-4 flex items-center justify-between">
                 <p className="text-sm">
                     Page {currentPage} out of{" "}
-                    {paginatedAttendanceQuery.data?.totalPage}
+                    {paginatedVisitorQuery.data?.totalPage}
                 </p>
 
                 <HStack>
@@ -111,8 +114,7 @@ const VisitorSection = () => {
                         colorScheme="blue"
                         onClick={() => setPage((state) => state + 1)}
                         isDisabled={
-                            paginatedAttendanceQuery.data?.totalPage ==
-                            currentPage
+                            paginatedVisitorQuery.data?.totalPage == currentPage
                         }
                     >
                         Next

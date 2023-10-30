@@ -32,7 +32,6 @@ const AddStudentModal = ({
     onClose,
     currentPage,
 }: AddStudentModalProps) => {
-    const [qrSrc, setQrSrc] = useState("");
     const { handleSubmit, register, reset, getValues } = useForm<StudentType>();
     const queryClient = useQueryClient();
 
@@ -78,10 +77,19 @@ const AddStudentModal = ({
                         <div className="w-full flex flex-col items-center gap-2">
                             <VStack w={"full"} spacing={0}>
                                 <FormLabel className="w-full">
-                                    Student name:
+                                    Student Last name:
                                 </FormLabel>
                                 <Input
-                                    {...register("studentName")}
+                                    {...register("studentLName")}
+                                    isRequired
+                                />
+                            </VStack>
+                            <VStack w={"full"} spacing={0}>
+                                <FormLabel className="w-full">
+                                    Student First name:
+                                </FormLabel>
+                                <Input
+                                    {...register("studentFName")}
                                     isRequired
                                 />
                             </VStack>

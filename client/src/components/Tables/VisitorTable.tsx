@@ -9,16 +9,12 @@ import {
     Button,
     useDisclosure,
 } from "@chakra-ui/react";
-import EditStudentModal from "../Modals/EditStudentModal";
-import DeleteStudentAlert from "../Alerts/DeleteStudentAlert";
-import ShowQRModal from "../Modals/ShowQRModal";
 
 export type VisitorType = {
     _id?: string;
-    firstName: string;
-    lastName: string;
+    visitorFName: string;
+    visitorLName: string;
     department: string;
-    purpose: string;
     timeIn: string;
     timeOut?: string;
 };
@@ -44,9 +40,6 @@ const VisitorTable = ({
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
                                 Department
-                            </Th>
-                            <Th className="border text-center p-2 text-base bg-[#008948]">
-                                Purpose
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
                                 Time in
@@ -87,62 +80,26 @@ const TableRow = ({
 
     return (
         <Tr key={data._id}>
-            <Td className="border text-center p-2 text-sm">{data.lastName}</Td>
-            <Td className="border text-center p-2 text-sm">{data.firstName}</Td>
+            <Td className="border text-center p-2 text-sm">
+                {data.visitorLName}
+            </Td>
+            <Td className="border text-center p-2 text-sm">
+                {data.visitorFName}
+            </Td>
             <Td className="border text-center p-2 text-sm">
                 {data.department}
             </Td>
-            <Td className="border text-center p-2 text-sm">{data.purpose}</Td>
             <Td className="border text-center p-2 text-sm">{data.timeIn}</Td>
             <Td className="border text-center p-2 text-sm">{data?.timeOut}</Td>
             <Td className=" border text-center p-2 text-sm">
                 <Button
                     size="sm"
                     variant="solid"
-                    colorScheme="green"
-                    backgroundColor={"#008948"}
-                    mr={2}
-                    onClick={showQrModal.onOpen}
-                >
-                    Show QR
-                </Button>
-                <Button
-                    size="sm"
-                    variant="solid"
-                    colorScheme="blue"
-                    mr={2}
-                    onClick={editBookModal.onOpen}
-                >
-                    Edit
-                </Button>
-                <Button
-                    size="sm"
-                    variant="solid"
                     colorScheme="red"
                     onClick={deleteBookAlert.onOpen}
                 >
-                    Remove
+                    Out
                 </Button>
-
-                {/* <ShowQRModal
-                    isOpen={showQrModal.isOpen}
-                    onClose={showQrModal.onClose}
-                    studentData={data}
-                />
-
-                <EditStudentModal
-                    isOpen={editBookModal.isOpen}
-                    onClose={editBookModal.onClose}
-                    studentData={data}
-                    currentPage={currentPage}
-                />
-
-                <DeleteStudentAlert
-                    isOpen={deleteBookAlert.isOpen}
-                    onClose={deleteBookAlert.onClose}
-                    studentData={data}
-                    currentPage={currentPage}
-                /> */}
             </Td>
         </Tr>
     );

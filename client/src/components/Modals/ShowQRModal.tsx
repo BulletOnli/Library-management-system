@@ -22,7 +22,7 @@ const ShowQRModal = ({ isOpen, onClose, studentData }: ShowQRModalProps) => {
     const handleDownload = () => {
         const a = document.createElement("a");
         a.href = studentData.studentQR;
-        a.download = `${studentData.studentName.split(" ")[0]}_QR.png`;
+        a.download = `${studentData.studentFName}_QR.png`;
         a.click();
     };
 
@@ -30,9 +30,7 @@ const ShowQRModal = ({ isOpen, onClose, studentData }: ShowQRModalProps) => {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>
-                    {studentData.studentName.split(" ")[0]}'s QR Code
-                </ModalHeader>
+                <ModalHeader>{studentData.studentFName}'s QR Code</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody className="flex justify-center items-center">
                     <Image src={studentData.studentQR} />

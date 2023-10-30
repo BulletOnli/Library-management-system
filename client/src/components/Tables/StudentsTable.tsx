@@ -15,7 +15,8 @@ import ShowQRModal from "../Modals/ShowQRModal";
 
 export type StudentType = {
     _id?: string;
-    studentName: string;
+    studentFName: string;
+    studentLName: string;
     studentCourse: string;
     studentQR: string;
     createdAt: string;
@@ -37,16 +38,19 @@ const StudentsTable = ({
                             <Th className="w-[20rem] border text-center p-2 text-base bg-[#008948]">
                                 Student ID
                             </Th>
-                            <Th className="w-[25rem] border text-center p-2 text-base bg-[#008948]">
-                                Full name
+                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                                Last name
+                            </Th>
+                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                                First name
                             </Th>
                             <Th className="border text-center p-2 text-base bg-[#008948]">
                                 Course
                             </Th>
-                            <Th className="border text-center p-2 text-base bg-[#008948]">
+                            <Th className="w-[10rem]  border text-center p-2 text-base bg-[#008948]">
                                 Date Registered
                             </Th>
-                            <Th className="w-[20rem] border text-center p-2 text-base bg-[#008948]">
+                            <Th className="w-[15rem] border text-center p-2 text-base bg-[#008948]">
                                 Action
                             </Th>
                         </Tr>
@@ -81,7 +85,10 @@ const TableRow = ({
         <Tr key={data._id}>
             <Td className="border text-center p-2 text-sm">{data._id}</Td>
             <Td className="border text-center p-2 text-sm">
-                {data.studentName}
+                {data.studentLName}
+            </Td>
+            <Td className="border text-center p-2 text-sm">
+                {data.studentFName}
             </Td>
             <Td className="border text-center p-2 text-sm">
                 {data.studentCourse}

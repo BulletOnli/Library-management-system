@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import Visitor from "../models/visitorModel";
 
-export const getAllAttendance = asyncHandler(
+export const getAllVisitors = asyncHandler(
     async (req: Request, res: Response) => {
         const attendances = await Visitor.find();
 
@@ -10,16 +10,16 @@ export const getAllAttendance = asyncHandler(
     }
 );
 
-export const addNewAttendance = asyncHandler(
+export const addNewVisitor = asyncHandler(
     async (req: Request, res: Response) => {
-        const { firstName, lastName, department, purpose, timeIn } = req.body;
+        const { studentFName, studentLName, department, timeIn } = req.body;
 
         const newLog = await Visitor.create({
-            firstName,
-            lastName,
+            visitorFName: studentFName,
+            visitorLName: studentLName,
             department,
-            purpose,
             timeIn,
+            timeOut: "",
         });
 
         if (newLog) {

@@ -84,16 +84,29 @@ const EditStudentModal = ({
                             </VStack>
                             <VStack w={"full"} spacing={0}>
                                 <FormLabel className="w-full">
-                                    Stduent Name:
+                                    Stduent Last Name:
                                 </FormLabel>
                                 <Input
-                                    {...register("studentName", {
+                                    {...register("studentLName", {
                                         required: true,
                                     })}
-                                    defaultValue={studentData.studentName}
+                                    defaultValue={studentData.studentLName}
                                     isRequired
                                 />
                             </VStack>
+                            <VStack w={"full"} spacing={0}>
+                                <FormLabel className="w-full">
+                                    Stduent First Name:
+                                </FormLabel>
+                                <Input
+                                    {...register("studentFName", {
+                                        required: true,
+                                    })}
+                                    defaultValue={studentData.studentFName}
+                                    isRequired
+                                />
+                            </VStack>
+
                             <VStack w={"full"} spacing={0}>
                                 <FormLabel className="w-full">
                                     Course:

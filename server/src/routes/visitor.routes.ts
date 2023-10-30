@@ -1,8 +1,12 @@
 import express from "express";
-import { getAllAttendance } from "../controllers/visitor.controller";
+import {
+    addNewVisitor,
+    getAllVisitors,
+} from "../controllers/visitor.controller";
 
 const router = express.Router();
 
-router.get("/", getAllAttendance);
+router.get("/list", getAllVisitors);
+router.post("/add", addNewVisitor);
 
 export default router;

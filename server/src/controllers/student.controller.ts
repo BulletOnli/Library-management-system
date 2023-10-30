@@ -58,15 +58,17 @@ export const paginatedStudentsList = asyncHandler(
 );
 
 export const addStudent = asyncHandler(async (req: Request, res: Response) => {
-    const { studentName, studentCourse } = req.body;
+    const { studentFName, studentLName, studentCourse } = req.body;
 
     const newStudent = await Student.create({
-        studentName,
+        studentFName,
+        studentLName,
         studentCourse,
     });
 
     const qrDetails = {
-        studentName: newStudent.studentName,
+        studentFName: newStudent.studentFName,
+        studentLName: newStudent.studentLName,
         studentCourse: newStudent.studentCourse,
         _id: newStudent._id,
     };
@@ -90,7 +92,7 @@ export const addStudent = asyncHandler(async (req: Request, res: Response) => {
 
 export const updateStudent = asyncHandler(
     async (req: Request, res: Response) => {
-        const { studentName, studentCourse } = req.body;
+        const { studentFName, studentLName, studentCourse } = req.body;
         const { studentId } = req.query;
 
         const student = await Student.findById(studentId).select([
@@ -104,12 +106,14 @@ export const updateStudent = asyncHandler(
 
             QRCode.toDataURL(
                 JSON.stringify({
-                    studentName,
+                    studentFName,
+                    studentLName,
                     studentCourse,
                     _id,
                 }),
                 (err, url) => {
-                    if (studentName) student.studentName = studentName;
+                    if (studentFName) student.studentFName = studentFName;
+                    if (studentLName) student.studentLName = studentLName;
                     if (studentCourse) student.studentCourse = studentCourse;
 
                     student.studentQR = url;
@@ -143,27 +147,14 @@ export const removeStudent = asyncHandler(
     }
 );
 
-export const downloadStudentQR = asyncHandler(
-    async (req: Request, res: Response) => {
-        const { studentId } = req.query;
-        const student = await Student.findById(studentId).select(["studentQR"]);
-
-        // if (student) {
-        //     const base64Data = student?.studentQR;
-        //     const blob = new Blob([base64Data], { type: "image/png" });
-        // } else {
-        //     res.status(500).json({ message: "Server Error" });
-        // }
-    }
-);
-
 export const exportStudentsData = asyncHandler(
     async (req: Request, res: Response) => {
         const studentsData = await Student.find();
         const csv = await json2csv(studentsData, {
             keys: [
                 "_id",
-                "studentName",
+                "studentFName",
+                "studentLName",
                 "studentCourse",
                 "studentQR",
                 "createdAt",

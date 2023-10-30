@@ -9,7 +9,7 @@ import {
     ModalCloseButton,
     Button,
 } from "@chakra-ui/react";
-import CameraComponent from "../CameraComponent";
+import QrCodeScanner from "../QrCodeScanner";
 
 type AddManualAttendanceProps = {
     onClose: () => void;
@@ -24,14 +24,13 @@ const AddVisitorAuto = ({ onClose, isOpen }: AddManualAttendanceProps) => {
                 <ModalHeader>New visitor via QR</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <CameraComponent />
+                    <QrCodeScanner onClose={onClose} />
                 </ModalBody>
 
                 <ModalFooter>
                     <Button colorScheme="blue" mr={3} onClick={onClose}>
                         Close
                     </Button>
-                    <Button variant="ghost">Secondary Action</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

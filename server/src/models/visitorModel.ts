@@ -1,19 +1,15 @@
 import mongoose from "mongoose";
 
 const attendanceSchema = new mongoose.Schema({
-    firstName: {
+    visitorFName: {
         type: String,
         required: true,
     },
-    lastName: {
+    visitorLName: {
         type: String,
         required: true,
     },
     department: {
-        type: String,
-        required: true,
-    },
-    purpose: {
         type: String,
         required: true,
     },
@@ -23,10 +19,9 @@ const attendanceSchema = new mongoose.Schema({
     },
     timeOut: {
         type: Date,
-        required: true,
     },
 });
 
 export type attendanceType = mongoose.InferSchemaType<typeof attendanceSchema>;
 
-export default mongoose.model<attendanceType>("Attendance", attendanceSchema);
+export default mongoose.model<attendanceType>("Visitor", attendanceSchema);
