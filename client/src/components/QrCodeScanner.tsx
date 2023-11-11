@@ -9,9 +9,6 @@ const QrCodeScanner = ({ onClose }: { onClose: () => void }) => {
     const queryClient = useQueryClient();
     const [isSuccess, setIsSuccess] = useState(false);
 
-    //TODO Fix the camera, 2 cameras rendered
-    //TODO Fix off the camera after scanning / after using
-
     const addVisitorMutation = useMutation({
         mutationFn: async (data: any) => {
             const response = await axios.post(
