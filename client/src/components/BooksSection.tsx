@@ -16,11 +16,14 @@ import { BsSearch } from "react-icons/bs";
 import BooksTable from "./Tables/BooksTable";
 import AddBookModal from "./Modals/AddBookModal";
 import useSortBooks from "@/hooks/useSortBooks";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const BooksSection = () => {
+    const router = useRouter();
+    const currentPage = Number(useSearchParams().get("page"));
+    const sortBy = useSearchParams().get("sortBy") || "date";
+
     const { isOpen, onClose, onOpen } = useDisclosure();
-    const [currentPage, setPage] = useState(1);
-    const [sortBy, setSortBy] = useState("");
 
     const paginatedBooksQuery = useQuery({
         queryKey: ["books", "list", currentPage],
@@ -53,18 +56,22 @@ const BooksSection = () => {
 
     return (
         <>
-            <div className="w-full flex items-center justify-between">
+            <section className="w-full flex items-center justify-between">
                 <HStack>
                     <p>Sort by:</p>
                     <Select
                         w={"fit-content"}
                         size="sm"
-                        onChange={(e) => setSortBy(e.target.value)}
+                        onChange={(e) =>
+                            router.push(
+                                `/books/manage?page=${currentPage}&sortBy=${e.target.value}`
+                            )
+                        }
                     >
-                        <option className="text-black" value="Date">
+                        <option className="text-black" value="date">
                             Date added (Ascending)
                         </option>
-                        <option className="text-black" value="Title">
+                        <option className="text-black" value="title">
                             Title (Ascending)
                         </option>
                     </Select>
@@ -92,7 +99,7 @@ const BooksSection = () => {
                         Export Data
                     </Button>
                 </HStack>
-            </div>
+            </section>
 
             <Spacer />
             <BooksTable bookList={sortedArray} currentPage={currentPage} />
@@ -109,7 +116,9 @@ const BooksSection = () => {
                     <Button
                         size="sm"
                         colorScheme="blue"
-                        onClick={() => setPage((state) => state - 1)}
+                        onClick={() =>
+                            router.push(`/books/manage?page=${currentPage - 1}`)
+                        }
                         isDisabled={currentPage == 1}
                     >
                         Prev
@@ -117,7 +126,9 @@ const BooksSection = () => {
                     <Button
                         size="sm"
                         colorScheme="blue"
-                        onClick={() => setPage((state) => state + 1)}
+                        onClick={() =>
+                            router.push(`/books/manage?page=${currentPage + 1}`)
+                        }
                         isDisabled={
                             paginatedBooksQuery.data?.totalPage == currentPage
                         }

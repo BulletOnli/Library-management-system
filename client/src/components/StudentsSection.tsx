@@ -16,11 +16,14 @@ import { BsSearch } from "react-icons/bs";
 import StudentsTable from "./Tables/StudentsTable";
 import AddStudentModal from "./Modals/AddStudentModal";
 import useSortStudents from "@/hooks/useSortStudents";
-import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const StudentsSection = () => {
+    const router = useRouter();
+    const currentPage = Number(useSearchParams().get("page"));
+
     const { isOpen, onClose, onOpen } = useDisclosure();
-    const [currentPage, setPage] = useState(1);
+    // const [currentPage, setPage] = useState(1);
     const [sortBy, setSortBy] = useState("");
 
     const paginatedStudentsQuery = useQuery({
@@ -116,7 +119,11 @@ const StudentsSection = () => {
                     <Button
                         size="sm"
                         colorScheme="blue"
-                        onClick={() => setPage((state) => state - 1)}
+                        onClick={() =>
+                            router.push(
+                                `/students/manage?page=${currentPage - 1}`
+                            )
+                        }
                         isDisabled={currentPage == 1}
                     >
                         Prev
@@ -124,7 +131,11 @@ const StudentsSection = () => {
                     <Button
                         size="sm"
                         colorScheme="blue"
-                        onClick={() => setPage((state) => state + 1)}
+                        onClick={() =>
+                            router.push(
+                                `/students/manage?page=${currentPage + 1}`
+                            )
+                        }
                         isDisabled={
                             paginatedStudentsQuery.data?.totalPage ==
                             currentPage

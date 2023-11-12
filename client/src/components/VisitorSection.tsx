@@ -97,7 +97,7 @@ const VisitorSection = () => {
             <div className="w-full mt-4 flex items-center justify-between">
                 <p className="text-sm">
                     Page {currentPage} out of{" "}
-                    {paginatedVisitorQuery.data?.totalPage}
+                    {paginatedVisitorQuery.data?.length}
                 </p>
 
                 <HStack>

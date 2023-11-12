@@ -5,7 +5,7 @@ const useSortBooks = (initialArray: BookType[], sortOrder: string) => {
     const [sortedArray, setSortedArray] = useState<BookType[]>([]);
 
     useEffect(() => {
-        if (initialArray && sortOrder === "Title") {
+        if (initialArray && sortOrder === "title") {
             const sorted = [...initialArray].sort((a: any, b: any) => {
                 const nameA = a.title.toLowerCase();
                 const nameB = b.title.toLowerCase();
@@ -15,7 +15,7 @@ const useSortBooks = (initialArray: BookType[], sortOrder: string) => {
                 return 0;
             });
             setSortedArray(sorted);
-        } else if (initialArray && sortOrder === "Date") {
+        } else if (initialArray && sortOrder === "date") {
             setSortedArray(initialArray);
         } else {
             setSortedArray(initialArray);
