@@ -62,6 +62,8 @@ const BooksTable = ({
                     </Tbody>
                 </Table>
             </TableContainer>
+
+            {bookList?.length === 0 && <div>No result</div>}
         </>
     );
 };

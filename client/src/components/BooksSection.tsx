@@ -11,12 +11,12 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
-import BooksTable, { BookType } from "./Tables/BooksTable";
+import BooksTable from "./Tables/BooksTable";
 import AddBookModal from "./Modals/AddBookModal";
 import useSortBooks from "@/hooks/useSortBooks";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import throttle from "lodash.throttle";
 
 const BooksSection = () => {
@@ -64,13 +64,14 @@ const BooksSection = () => {
         link.click();
     };
 
-    const handleSearch = throttle(async (e: any) => {
-        router.push(
-            `/books/manage?page=${currentPage}&sortBy=title&search=${e}`
+    useEffect(() => {
+        const refreshPaginatedBooks = throttle(
+            async () => await paginatedBooksQuery.refetch(),
+            500
         );
 
-        await paginatedBooksQuery.refetch();
-    }, 500);
+        refreshPaginatedBooks();
+    }, [searchQuery]);
 
     return (
         <>
@@ -100,9 +101,13 @@ const BooksSection = () => {
                         <BsSearch color="gray.300" />
                     </InputLeftElement>
                     <Input
-                        placeholder="Search a Book"
+                        placeholder="Search a title or author"
                         _placeholder={{ color: "gray.50" }}
-                        onChange={(e) => handleSearch(e.target.value)}
+                        onChange={(e) =>
+                            router.push(
+                                `/books/manage?page=${currentPage}&sortBy=${sortBy}&search=${e.target.value}`
+                            )
+                        }
                         className="placeholder:text-center"
                     />
                 </InputGroup>
@@ -136,13 +141,18 @@ const BooksSection = () => {
                     <Button
                         size="sm"
                         colorScheme="blue"
-                        onClick={() =>
+                        onClick={() => {
+                            const hasSearchQuery =
+                                searchQuery !== null
+                                    ? `&search=${searchQuery}`
+                                    : "";
+
                             router.push(
                                 `/books/manage?page=${
                                     currentPage - 1
-                                }&sortBy=${sortBy}`
-                            )
-                        }
+                                }&sortBy=${sortBy}${hasSearchQuery}`
+                            );
+                        }}
                         isDisabled={currentPage == 1}
                     >
                         Prev
@@ -150,13 +160,18 @@ const BooksSection = () => {
                     <Button
                         size="sm"
                         colorScheme="blue"
-                        onClick={() =>
+                        onClick={() => {
+                            const hasSearchQuery =
+                                searchQuery !== null
+                                    ? `$search=${searchQuery}`
+                                    : "";
+
                             router.push(
                                 `/books/manage?page=${
                                     currentPage + 1
-                                }&sortBy=${sortBy}`
-                            )
-                        }
+                                }&sortBy=${sortBy}${hasSearchQuery}`
+                            );
+                        }}
                         isDisabled={
                             paginatedBooksQuery.data?.totalPage == currentPage
                         }

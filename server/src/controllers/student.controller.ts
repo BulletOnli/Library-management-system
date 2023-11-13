@@ -7,7 +7,7 @@ import QRCode from "qrcode";
 
 export const getAllStudents = asyncHandler(
     async (req: Request, res: Response) => {
-        const students = await Student.find();
+        const students = await Student.find().lean();
 
         res.status(200).json(students);
     }
@@ -15,7 +15,7 @@ export const getAllStudents = asyncHandler(
 
 export const paginatedStudentsList = asyncHandler(
     async (req: Request, res: Response) => {
-        const students = await Student.find();
+        const students = await Student.find().lean();
 
         const limit = parseInt(req.query.limit as string);
         const page = parseInt(req.query.page as string);
@@ -50,7 +50,10 @@ export const paginatedStudentsList = asyncHandler(
             };
         }
 
-        results.results = await Student.find().limit(limit).skip(startIndex);
+        results.results = await Student.find()
+            .limit(limit)
+            .skip(startIndex)
+            .lean();
         results.totalPage = Math.ceil(students.length / limit);
 
         res.status(200).json(results);
@@ -149,7 +152,7 @@ export const removeStudent = asyncHandler(
 
 export const exportStudentsData = asyncHandler(
     async (req: Request, res: Response) => {
-        const studentsData = await Student.find();
+        const studentsData = await Student.find().lean();
         const csv = await json2csv(studentsData, {
             keys: [
                 "_id",

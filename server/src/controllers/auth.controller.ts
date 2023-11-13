@@ -9,7 +9,7 @@ import { getAccessToken } from "../utils/tokens";
 export const registerUser = asyncHandler(
     async (req: Request, res: Response) => {
         const { email, firstName, lastName, password } = req.body;
-        const user = await User.findOne({ email }).select("email");
+        const user = await User.findOne({ email }).select("email").lean();
 
         if (user) {
             res.status(400);

@@ -4,7 +4,7 @@ import Visitor from "../models/visitorModel";
 
 export const getAllVisitors = asyncHandler(
     async (req: Request, res: Response) => {
-        const attendances = await Visitor.find();
+        const attendances = await Visitor.find().lean();
 
         res.status(200).json(attendances);
     }

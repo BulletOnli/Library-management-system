@@ -5,14 +5,14 @@ import { json2csv } from "json-2-csv";
 import fs from "fs";
 
 export const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
-    const books = await Book.find();
+    const books = await Book.find().lean();
 
     res.status(200).json(books);
 });
 
 export const getPaginateBooks = asyncHandler(
     async (req: Request, res: Response) => {
-        const books = await Book.find().select("_id");
+        const books = await Book.find().select("_id").lean();
 
         const searchQuery = req.query.search;
         const page = parseInt(req.query.page as string);
@@ -57,7 +57,10 @@ export const getPaginateBooks = asyncHandler(
               }
             : {};
 
-        results.results = await Book.find(search).limit(limit).skip(startIndex);
+        results.results = await Book.find(search)
+            .limit(limit)
+            .skip(startIndex)
+            .lean();
         results.totalPage = Math.ceil(books.length / limit);
 
         res.status(200).json(results);
@@ -112,7 +115,7 @@ export const removeBook = asyncHandler(async (req: Request, res: Response) => {
 
 export const exportBooksData = asyncHandler(
     async (req: Request, res: Response) => {
-        const booksData = await Book.find();
+        const booksData = await Book.find().lean();
         const csv = await json2csv(booksData, {
             keys: ["title", "author", "publisher", "category"],
         });
