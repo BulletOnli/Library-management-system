@@ -41,7 +41,7 @@ const Sidebar = () => {
                         Visitor Log
                     </p>
                 </Link>
-                <Link href="/students/manage?page=1">
+                <Link href="/students/manage?page=1&sortBy=title">
                     <p
                         className={`${
                             pathname === "/students/manage"
@@ -52,7 +52,7 @@ const Sidebar = () => {
                         Manage Students
                     </p>
                 </Link>
-                <Link href="/books/manage?page=1">
+                <Link href="/books/manage?page=1&sortBy=title">
                     <p
                         className={`${
                             pathname === "/books/manage"

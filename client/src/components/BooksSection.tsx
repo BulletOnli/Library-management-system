@@ -13,23 +13,33 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import BooksTable from "./Tables/BooksTable";
+import BooksTable, { BookType } from "./Tables/BooksTable";
 import AddBookModal from "./Modals/AddBookModal";
 import useSortBooks from "@/hooks/useSortBooks";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import throttle from "lodash.throttle";
 
 const BooksSection = () => {
+    const searchParams = useSearchParams();
     const router = useRouter();
-    const currentPage = Number(useSearchParams().get("page"));
-    const sortBy = useSearchParams().get("sortBy") || "date";
-
     const { isOpen, onClose, onOpen } = useDisclosure();
+
+    const currentPage = Number(searchParams.get("page"));
+    const sortBy = searchParams.get("sortBy") || "title";
+    const searchQuery = searchParams.get("search");
 
     const paginatedBooksQuery = useQuery({
         queryKey: ["books", "list", currentPage],
         queryFn: async () => {
             const response = await axios.get(
-                `http://localhost:5050/books/list/paginated?page=${currentPage}&limit=20`
+                `http://localhost:5050/books/list/paginated`,
+                {
+                    params: {
+                        page: currentPage,
+                        limit: 20,
+                        search: searchQuery,
+                    },
+                }
             );
 
             return response.data;
@@ -54,6 +64,14 @@ const BooksSection = () => {
         link.click();
     };
 
+    const handleSearch = throttle(async (e: any) => {
+        router.push(
+            `/books/manage?page=${currentPage}&sortBy=title&search=${e}`
+        );
+
+        await paginatedBooksQuery.refetch();
+    }, 500);
+
     return (
         <>
             <section className="w-full flex items-center justify-between">
@@ -68,11 +86,11 @@ const BooksSection = () => {
                             )
                         }
                     >
-                        <option className="text-black" value="date">
-                            Date added (Ascending)
-                        </option>
                         <option className="text-black" value="title">
-                            Title (Ascending)
+                            Title
+                        </option>
+                        <option className="text-black" value="date">
+                            Date added
                         </option>
                     </Select>
                 </HStack>
@@ -84,6 +102,8 @@ const BooksSection = () => {
                     <Input
                         placeholder="Search a Book"
                         _placeholder={{ color: "gray.50" }}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        className="placeholder:text-center"
                     />
                 </InputGroup>
 
@@ -117,7 +137,11 @@ const BooksSection = () => {
                         size="sm"
                         colorScheme="blue"
                         onClick={() =>
-                            router.push(`/books/manage?page=${currentPage - 1}`)
+                            router.push(
+                                `/books/manage?page=${
+                                    currentPage - 1
+                                }&sortBy=${sortBy}`
+                            )
                         }
                         isDisabled={currentPage == 1}
                     >
@@ -127,7 +151,11 @@ const BooksSection = () => {
                         size="sm"
                         colorScheme="blue"
                         onClick={() =>
-                            router.push(`/books/manage?page=${currentPage + 1}`)
+                            router.push(
+                                `/books/manage?page=${
+                                    currentPage + 1
+                                }&sortBy=${sortBy}`
+                            )
                         }
                         isDisabled={
                             paginatedBooksQuery.data?.totalPage == currentPage

@@ -14,7 +14,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
                 <Toaster richColors position="bottom-left" />
                 <ChakraProvider>{children}</ChakraProvider>
             </CacheProvider>
-            {/* <ReactQueryDevtools /> */}
+            <ReactQueryDevtools />
         </QueryClientProvider>
     );
 };

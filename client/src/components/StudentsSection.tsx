@@ -18,19 +18,21 @@ import AddStudentModal from "./Modals/AddStudentModal";
 import useSortStudents from "@/hooks/useSortStudents";
 import { useRouter, useSearchParams } from "next/navigation";
 
+//todo IMPLEMENT SORT BY, ADD IT TO THE URL
+
 const StudentsSection = () => {
     const router = useRouter();
     const currentPage = Number(useSearchParams().get("page"));
 
     const { isOpen, onClose, onOpen } = useDisclosure();
-    // const [currentPage, setPage] = useState(1);
     const [sortBy, setSortBy] = useState("");
 
     const paginatedStudentsQuery = useQuery({
         queryKey: ["students", "list", currentPage],
         queryFn: async () => {
             const response = await axios.get(
-                `http://localhost:5050/students/list/paginated?page=${currentPage}&limit=20`
+                `http://localhost:5050/students/list/paginated`,
+                { params: { page: currentPage, limit: 20 } }
             );
 
             return response.data;
@@ -69,10 +71,10 @@ const StudentsSection = () => {
                         onChange={(e) => setSortBy(e.target.value)}
                     >
                         <option className="text-black" value="Date">
-                            Date added (Ascending)
+                            Date added
                         </option>
                         <option className="text-black" value="studentName">
-                            Student Name (Ascending)
+                            Student Name
                         </option>
                     </Select>
                 </HStack>

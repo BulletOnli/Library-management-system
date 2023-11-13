@@ -6,13 +6,15 @@ import fs from "fs";
 
 export const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
     const books = await Book.find();
+
     res.status(200).json(books);
 });
 
-export const paginateBooks = asyncHandler(
+export const getPaginateBooks = asyncHandler(
     async (req: Request, res: Response) => {
         const books = await Book.find().select("_id");
 
+        const searchQuery = req.query.search;
         const page = parseInt(req.query.page as string);
         const limit = parseInt(req.query.limit as string);
 
@@ -46,7 +48,16 @@ export const paginateBooks = asyncHandler(
             };
         }
 
-        results.results = await Book.find().limit(limit).skip(startIndex);
+        const search = searchQuery
+            ? {
+                  $or: [
+                      { title: { $regex: searchQuery, $options: "i" } },
+                      { author: { $regex: searchQuery, $options: "i" } },
+                  ],
+              }
+            : {};
+
+        results.results = await Book.find(search).limit(limit).skip(startIndex);
         results.totalPage = Math.ceil(books.length / limit);
 
         res.status(200).json(results);
