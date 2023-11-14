@@ -12,9 +12,9 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
-import AttendanceTable from "./Tables/VisitorTable";
-import AddVisitorAuto from "./Modals/AddVisitorAuto";
-import AddVisitorManual from "./Modals/AddVisitorManual";
+import AttendanceTable from "../Tables/VisitorTable";
+import AddVisitorAuto from "../Modals/AddVisitorAuto";
+import AddVisitorManual from "../Modals/AddVisitorManual";
 
 const VisitorSection = () => {
     const manualVisitorModal = useDisclosure();

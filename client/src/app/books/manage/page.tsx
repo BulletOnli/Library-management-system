@@ -1,4 +1,4 @@
-import BooksSection from "@/components/BooksSection";
+import BooksSection from "@/components/Sections/BooksSection";
 
 const BooksList = () => {
     return (

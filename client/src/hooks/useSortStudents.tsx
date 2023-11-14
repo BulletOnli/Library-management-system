@@ -5,17 +5,18 @@ const useSortStudents = (initialArray: StudentType[], sortOrder: string) => {
     const [sortedArray, setSortedArray] = useState<StudentType[]>([]);
 
     useEffect(() => {
-        if (initialArray && sortOrder === "studentName") {
+        if (initialArray && sortOrder === "studentLName") {
             const sorted = [...initialArray].sort((a: any, b: any) => {
-                const nameA = a.studentName.toLowerCase();
-                const nameB = b.studentName.toLowerCase();
+                console.log(a, b);
+                const nameA = a.studentLName.toLowerCase();
+                const nameB = b.studentLName.toLowerCase();
 
                 if (nameA < nameB) return -1;
                 if (nameA > nameB) return 1;
                 return 0;
             });
             setSortedArray(sorted);
-        } else if (initialArray && sortOrder === "Date") {
+        } else if (initialArray && sortOrder === "date") {
             setSortedArray(initialArray);
         } else {
             setSortedArray(initialArray);

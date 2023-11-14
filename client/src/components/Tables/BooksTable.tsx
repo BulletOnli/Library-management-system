@@ -6,12 +6,12 @@ import {
     Th,
     Td,
     TableContainer,
-    Button,
     useDisclosure,
+    IconButton,
 } from "@chakra-ui/react";
 import EditBookModal from "../Modals/EditBookModal";
 import DeleteBookAlert from "../Alerts/DeleteBookAlert";
-import { useState } from "react";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 export type BookType = {
     _id?: string;
@@ -63,7 +63,9 @@ const BooksTable = ({
                 </Table>
             </TableContainer>
 
-            {bookList?.length === 0 && <div>No result</div>}
+            {bookList?.length === 0 && (
+                <div className="absolute text-xl">No result found!</div>
+            )}
         </>
     );
 };
@@ -84,24 +86,23 @@ const TableRow = ({
             <Td className="border text-center p-2 text-sm">{data.author}</Td>
             <Td className="border text-center p-2 text-sm">{data.publisher}</Td>
             <Td className="border text-center p-2 text-sm">{data.category}</Td>
-            <Td className=" border text-center p-2 text-sm">
-                <Button
+            <Td className="border p-2 text-center text-sm">
+                <IconButton
+                    aria-label="Delete book"
                     size="sm"
-                    variant="solid"
                     colorScheme="blue"
-                    mr={2}
+                    mx={1}
+                    icon={<EditIcon />}
                     onClick={editBookModal.onOpen}
-                >
-                    Edit
-                </Button>
-                <Button
+                />
+                <IconButton
+                    aria-label="Delete book"
                     size="sm"
-                    variant="solid"
                     colorScheme="red"
+                    mx={1}
+                    icon={<DeleteIcon />}
                     onClick={deleteBookAlert.onOpen}
-                >
-                    Remove
-                </Button>
+                />
 
                 <EditBookModal
                     isOpen={editBookModal.isOpen}

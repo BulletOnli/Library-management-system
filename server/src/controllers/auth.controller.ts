@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import User from "../models/userModel";
 import bcrypt from "bcrypt";
 import { z } from "zod";
-import { fromZodError } from "zod-validation-error";
 import { getAccessToken } from "../utils/tokens";
 
 export const registerUser = asyncHandler(
@@ -17,17 +16,27 @@ export const registerUser = asyncHandler(
         }
 
         // Validate req.body (register details)
-        const validate = z.object({
+        const signupSchema = z.object({
             email: z.string().email().endsWith(".com"),
-            firstName: z.string().min(2),
-            lastName: z.string().min(3),
-            password: z.string().min(8),
+            firstName: z
+                .string()
+                .min(2, "First name must be at least 2 characters"),
+            lastName: z
+                .string()
+                .min(3, "Last name must be at least 3 characters"),
+            password: z
+                .string()
+                .min(8, "Password must be at least 8 characters"),
         });
-        const validateResults = validate.safeParse(req.body);
+        const validateResults = signupSchema.safeParse(req.body);
 
         if (!validateResults.success) {
+            const error = validateResults.error.errors[0];
+
             res.status(400);
-            throw new Error(fromZodError(validateResults.error).message);
+            throw new Error(
+                error.message.replace(/String/g, error.path.toString())
+            );
         }
 
         const newUser = await User.create({

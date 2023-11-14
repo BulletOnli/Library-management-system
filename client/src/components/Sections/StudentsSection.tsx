@@ -11,30 +11,39 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
-import StudentsTable from "./Tables/StudentsTable";
-import AddStudentModal from "./Modals/AddStudentModal";
+import StudentsTable from "../Tables/StudentsTable";
+import AddStudentModal from "../Modals/AddStudentModal";
 import useSortStudents from "@/hooks/useSortStudents";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-//todo IMPLEMENT SORT BY, ADD IT TO THE URL
+const STDUENTS_TABLE_LIMIT = 20;
 
 const StudentsSection = () => {
     const router = useRouter();
-    const currentPage = Number(useSearchParams().get("page"));
-
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
     const { isOpen, onClose, onOpen } = useDisclosure();
-    const [sortBy, setSortBy] = useState("");
+
+    let currentPage = Number(searchParams.get("page"));
+    const sortBy = searchParams.get("sortBy") || "studentLName";
+    const searchQuery = searchParams.get("search");
+    const hasSearchQuery = searchQuery !== null ? `&search=${searchQuery}` : "";
 
     const paginatedStudentsQuery = useQuery({
         queryKey: ["students", "list", currentPage],
         queryFn: async () => {
             const response = await axios.get(
                 `http://localhost:5050/students/list/paginated`,
-                { params: { page: currentPage, limit: 20 } }
+                {
+                    params: {
+                        page: currentPage,
+                        limit: STDUENTS_TABLE_LIMIT,
+                        search: searchQuery,
+                    },
+                }
             );
-
             return response.data;
         },
     });
@@ -60,6 +69,13 @@ const StudentsSection = () => {
         link.click();
     };
 
+    useEffect(() => {
+        const refreshPaginatedBooks = async () =>
+            await paginatedStudentsQuery.refetch();
+
+        refreshPaginatedBooks();
+    }, [searchQuery]);
+
     return (
         <>
             <div className="w-full flex items-center justify-between">
@@ -68,13 +84,17 @@ const StudentsSection = () => {
                     <Select
                         w={"fit-content"}
                         size="sm"
-                        onChange={(e) => setSortBy(e.target.value)}
+                        onChange={(e) =>
+                            router.push(
+                                `${pathname}?page=${currentPage}&sortBy=${e.target.value}`
+                            )
+                        }
                     >
-                        <option className="text-black" value="Date">
-                            Date added
+                        <option className="text-black" value="studentLName">
+                            Last Name
                         </option>
-                        <option className="text-black" value="studentName">
-                            Student Name
+                        <option className="text-black" value="date">
+                            Date added
                         </option>
                     </Select>
                 </HStack>
@@ -86,6 +106,15 @@ const StudentsSection = () => {
                     <Input
                         placeholder="Search a Student"
                         _placeholder={{ color: "gray.50" }}
+                        onChange={(e) => {
+                            if (sortedArray.length <= STDUENTS_TABLE_LIMIT) {
+                                currentPage = 1;
+                            }
+
+                            router.push(
+                                `${pathname}?page=${currentPage}&sortBy=${sortBy}&search=${e.target.value}`
+                            );
+                        }}
                     />
                 </InputGroup>
 
@@ -123,7 +152,9 @@ const StudentsSection = () => {
                         colorScheme="blue"
                         onClick={() =>
                             router.push(
-                                `/students/manage?page=${currentPage - 1}`
+                                `${pathname}?page=${
+                                    currentPage - 1
+                                }&sortBy=${sortBy}${hasSearchQuery}`
                             )
                         }
                         isDisabled={currentPage == 1}
@@ -135,7 +166,9 @@ const StudentsSection = () => {
                         colorScheme="blue"
                         onClick={() =>
                             router.push(
-                                `/students/manage?page=${currentPage + 1}`
+                                `${pathname}?page=${
+                                    currentPage + 1
+                                }&sortBy=${sortBy}${hasSearchQuery}`
                             )
                         }
                         isDisabled={

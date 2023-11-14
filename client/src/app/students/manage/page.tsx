@@ -1,4 +1,4 @@
-import StudentsSection from "@/components/StudentsSection";
+import StudentsSection from "@/components/Sections/StudentsSection";
 
 const StudentPage = () => {
     return (

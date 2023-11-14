@@ -1,4 +1,4 @@
-import VisitorSection from "@/components/VisitorSection";
+import VisitorSection from "@/components/Sections/VisitorSection";
 
 const AttendancePage = () => {
     return (

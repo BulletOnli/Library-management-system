@@ -8,10 +8,13 @@ import {
     TableContainer,
     Button,
     useDisclosure,
+    IconButton,
 } from "@chakra-ui/react";
 import EditStudentModal from "../Modals/EditStudentModal";
 import DeleteStudentAlert from "../Alerts/DeleteStudentAlert";
 import ShowQRModal from "../Modals/ShowQRModal";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { BsQrCode } from "react-icons/bs";
 
 export type StudentType = {
     _id?: string;
@@ -66,6 +69,10 @@ const StudentsTable = ({
                     </Tbody>
                 </Table>
             </TableContainer>
+
+            {studentList?.length === 0 && (
+                <div className="absolute text-xl">No result found!</div>
+            )}
         </>
     );
 };
@@ -102,28 +109,27 @@ const TableRow = ({
                     variant="solid"
                     colorScheme="green"
                     backgroundColor={"#008948"}
-                    mr={2}
+                    mr={1}
                     onClick={showQrModal.onOpen}
                 >
                     Show QR
                 </Button>
-                <Button
+                <IconButton
+                    aria-label="Delete book"
                     size="sm"
-                    variant="solid"
                     colorScheme="blue"
-                    mr={2}
+                    mx={1}
+                    icon={<EditIcon />}
                     onClick={editBookModal.onOpen}
-                >
-                    Edit
-                </Button>
-                <Button
+                />
+                <IconButton
+                    aria-label="Delete book"
                     size="sm"
-                    variant="solid"
                     colorScheme="red"
+                    ml={1}
+                    icon={<DeleteIcon />}
                     onClick={deleteBookAlert.onOpen}
-                >
-                    Remove
-                </Button>
+                />
 
                 <ShowQRModal
                     isOpen={showQrModal.isOpen}

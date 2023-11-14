@@ -16,7 +16,7 @@ const Sidebar = () => {
     const pathname = usePathname();
 
     return (
-        <div className="sticky top-0 w-[18vw] h-screen flex flex-col items-center bg-[#008948]">
+        <div className="sticky top-0 w-[23rem] h-screen flex flex-col items-center bg-[#008948]">
             <VStack mt={6}>
                 <Image src="/gjclogo.png" alt="GJC Logo" width={100} />
                 <p className="text-xl font-bold">College Library</p>
@@ -41,7 +41,7 @@ const Sidebar = () => {
                         Visitor Log
                     </p>
                 </Link>
-                <Link href="/students/manage?page=1&sortBy=title">
+                <Link href="/students/manage?page=1&sortBy=studentLName">
                     <p
                         className={`${
                             pathname === "/students/manage"

@@ -13,20 +13,23 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
-import BooksTable from "./Tables/BooksTable";
-import AddBookModal from "./Modals/AddBookModal";
+import BooksTable from "../Tables/BooksTable";
+import AddBookModal from "../Modals/AddBookModal";
 import useSortBooks from "@/hooks/useSortBooks";
-import { useRouter, useSearchParams } from "next/navigation";
-import throttle from "lodash.throttle";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+
+const BOOKS_TABLE_LIMIT = 20;
 
 const BooksSection = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const pathname = usePathname();
     const { isOpen, onClose, onOpen } = useDisclosure();
 
-    const currentPage = Number(searchParams.get("page"));
+    let currentPage = Number(searchParams.get("page"));
     const sortBy = searchParams.get("sortBy") || "title";
     const searchQuery = searchParams.get("search");
+    const hasSearchQuery = searchQuery !== null ? `&search=${searchQuery}` : "";
 
     const paginatedBooksQuery = useQuery({
         queryKey: ["books", "list", currentPage],
@@ -36,12 +39,11 @@ const BooksSection = () => {
                 {
                     params: {
                         page: currentPage,
-                        limit: 20,
+                        limit: BOOKS_TABLE_LIMIT,
                         search: searchQuery,
                     },
                 }
             );
-
             return response.data;
         },
     });
@@ -65,10 +67,8 @@ const BooksSection = () => {
     };
 
     useEffect(() => {
-        const refreshPaginatedBooks = throttle(
-            async () => await paginatedBooksQuery.refetch(),
-            500
-        );
+        const refreshPaginatedBooks = async () =>
+            await paginatedBooksQuery.refetch();
 
         refreshPaginatedBooks();
     }, [searchQuery]);
@@ -83,7 +83,7 @@ const BooksSection = () => {
                         size="sm"
                         onChange={(e) =>
                             router.push(
-                                `/books/manage?page=${currentPage}&sortBy=${e.target.value}`
+                                `${pathname}?page=${currentPage}&sortBy=${e.target.value}`
                             )
                         }
                     >
@@ -103,11 +103,15 @@ const BooksSection = () => {
                     <Input
                         placeholder="Search a title or author"
                         _placeholder={{ color: "gray.50" }}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                            if (sortedArray.length <= BOOKS_TABLE_LIMIT) {
+                                currentPage = 1;
+                            }
+
                             router.push(
-                                `/books/manage?page=${currentPage}&sortBy=${sortBy}&search=${e.target.value}`
-                            )
-                        }
+                                `${pathname}?page=${currentPage}&sortBy=${sortBy}&search=${e.target.value}`
+                            );
+                        }}
                         className="placeholder:text-center"
                     />
                 </InputGroup>
@@ -142,13 +146,8 @@ const BooksSection = () => {
                         size="sm"
                         colorScheme="blue"
                         onClick={() => {
-                            const hasSearchQuery =
-                                searchQuery !== null
-                                    ? `&search=${searchQuery}`
-                                    : "";
-
                             router.push(
-                                `/books/manage?page=${
+                                `${pathname}?page=${
                                     currentPage - 1
                                 }&sortBy=${sortBy}${hasSearchQuery}`
                             );
@@ -161,13 +160,8 @@ const BooksSection = () => {
                         size="sm"
                         colorScheme="blue"
                         onClick={() => {
-                            const hasSearchQuery =
-                                searchQuery !== null
-                                    ? `$search=${searchQuery}`
-                                    : "";
-
                             router.push(
-                                `/books/manage?page=${
+                                `${pathname}?page=${
                                     currentPage + 1
                                 }&sortBy=${sortBy}${hasSearchQuery}`
                             );

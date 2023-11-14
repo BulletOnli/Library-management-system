@@ -22,7 +22,7 @@ export default function RootLayout({
                 <Providers>
                     <main className="w-full min-h-screen flex bg-[#28A86C] text-white">
                         <Sidebar />
-                        <div className="w-[82vw] h-full flex flex-col">
+                        <div className="w-full h-full flex flex-col ">
                             {children}
                         </div>
                     </main>

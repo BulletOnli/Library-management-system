@@ -12,41 +12,9 @@ export const getAllBooks = asyncHandler(async (req: Request, res: Response) => {
 
 export const getPaginateBooks = asyncHandler(
     async (req: Request, res: Response) => {
-        const books = await Book.find().select("_id").lean();
-
         const searchQuery = req.query.search;
         const page = parseInt(req.query.page as string);
         const limit = parseInt(req.query.limit as string);
-
-        const startIndex = (page - 1) * limit;
-        const endIndex = page * limit;
-
-        const results: {
-            next?: {
-                page: number;
-                limit: number;
-            };
-            prev?: {
-                page: number;
-                limit: number;
-            };
-            results?: BookType[];
-            totalPage?: number;
-        } = {};
-
-        if (endIndex < books.length) {
-            results.next = {
-                page: page + 1,
-                limit: limit,
-            };
-        }
-
-        if (startIndex > 0) {
-            results.prev = {
-                page: page - 1,
-                limit: limit,
-            };
-        }
 
         const search = searchQuery
             ? {
@@ -57,13 +25,16 @@ export const getPaginateBooks = asyncHandler(
               }
             : {};
 
-        results.results = await Book.find(search)
-            .limit(limit)
-            .skip(startIndex)
-            .lean();
-        results.totalPage = Math.ceil(books.length / limit);
+        // Just checking how many books without limit
+        const totalBooks = await Book.countDocuments(search);
 
-        res.status(200).json(results);
+        res.status(200).json({
+            results: await Book.find(search)
+                .limit(limit)
+                .skip((page - 1) * limit)
+                .lean(),
+            totalPage: Math.ceil(Math.max(1, totalBooks) / limit),
+        });
     }
 );
 

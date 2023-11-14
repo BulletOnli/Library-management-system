@@ -15,48 +15,29 @@ export const getAllStudents = asyncHandler(
 
 export const paginatedStudentsList = asyncHandler(
     async (req: Request, res: Response) => {
-        const students = await Student.find().lean();
-
         const limit = parseInt(req.query.limit as string);
         const page = parseInt(req.query.page as string);
+        const searchQuery = req.query.search;
 
-        const startIndex = (page - 1) * limit;
-        const endIndex = page * limit;
+        // Logic for finding student with case insensitive
+        const search = searchQuery
+            ? {
+                  $or: [
+                      { studentFName: { $regex: searchQuery, $options: "i" } },
+                      { studentLName: { $regex: searchQuery, $options: "i" } },
+                  ],
+              }
+            : {};
 
-        const results: {
-            next?: {
-                page: Number;
-                limit: Number;
-            };
-            prev?: {
-                page: Number;
-                limit: Number;
-            };
-            totalPage?: Number;
-            results?: StudentType[];
-        } = {};
+        const studentsTotal = await Student.countDocuments(search);
 
-        if (endIndex < students.length) {
-            results.next = {
-                page: page + 1,
-                limit: limit,
-            };
-        }
-
-        if (startIndex > 0) {
-            results.prev = {
-                page: page - 1,
-                limit: limit,
-            };
-        }
-
-        results.results = await Student.find()
-            .limit(limit)
-            .skip(startIndex)
-            .lean();
-        results.totalPage = Math.ceil(students.length / limit);
-
-        res.status(200).json(results);
+        res.status(200).json({
+            results: await Student.find(search)
+                .limit(limit)
+                .skip((page - 1) * limit)
+                .lean(),
+            totalPage: Math.ceil(Math.max(1, studentsTotal) / limit),
+        });
     }
 );
 
