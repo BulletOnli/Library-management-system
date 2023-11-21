@@ -7,7 +7,6 @@ import {
     removeBook,
     updateBook,
 } from "../controllers/book.controller";
-import protectRoute from "../middlewares/protectRoute";
 
 const router = express.Router();
 

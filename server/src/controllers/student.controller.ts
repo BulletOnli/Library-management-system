@@ -25,6 +25,7 @@ export const paginatedStudentsList = asyncHandler(
                   $or: [
                       { studentFName: { $regex: searchQuery, $options: "i" } },
                       { studentLName: { $regex: searchQuery, $options: "i" } },
+                      { _id: searchQuery },
                   ],
               }
             : {};

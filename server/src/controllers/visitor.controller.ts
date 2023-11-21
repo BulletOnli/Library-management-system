@@ -30,3 +30,22 @@ export const addNewVisitor = asyncHandler(
         }
     }
 );
+
+export const removeVisitor = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { timeOut } = req.body;
+        const { visitorId } = req.query;
+
+        const visitor = await Visitor.findById(visitorId);
+
+        if (visitor) {
+            visitor.timeOut = timeOut;
+            visitor.save();
+
+            res.status(200).json({ message: "Visitor is out!" });
+        } else {
+            res.status(404);
+            throw new Error("Visitor not found!");
+        }
+    }
+);

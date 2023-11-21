@@ -1,14 +1,5 @@
 "use client";
-import {
-    Accordion,
-    AccordionButton,
-    AccordionIcon,
-    AccordionItem,
-    AccordionPanel,
-    Box,
-    Image,
-    VStack,
-} from "@chakra-ui/react";
+import { Image, VStack } from "@chakra-ui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

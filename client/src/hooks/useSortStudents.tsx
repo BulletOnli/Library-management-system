@@ -7,7 +7,6 @@ const useSortStudents = (initialArray: StudentType[], sortOrder: string) => {
     useEffect(() => {
         if (initialArray && sortOrder === "studentLName") {
             const sorted = [...initialArray].sort((a: any, b: any) => {
-                console.log(a, b);
                 const nameA = a.studentLName.toLowerCase();
                 const nameB = b.studentLName.toLowerCase();
 
